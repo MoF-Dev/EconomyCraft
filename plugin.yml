@@ -1,0 +1,4 @@
+name: EconomyCraftPlugin
+main: th.in.mihome.economyCraft.ECPlugin
+version: 1.0
+commands:
