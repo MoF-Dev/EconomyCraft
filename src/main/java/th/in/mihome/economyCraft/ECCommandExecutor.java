@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 MoF Development.
+ * Copyright 2016 Kolatat Thangkasemvathana.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,31 +23,24 @@
  */
 package th.in.mihome.economyCraft;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.command.CommandSender;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public class ECPlugin extends JavaPlugin {
+public class ECCommandExecutor implements CommandExecutor {
 
-    ECCommandExecutor cmdExecutor = new ECCommandExecutor(this);
+    private final ECPlugin parent;
 
-    private void registerCommandExecutor(CommandExecutor executor, String... commands) {
-        for (String command : commands) {
-            getCommand(command).setExecutor(executor);
-        }
+    public ECCommandExecutor(ECPlugin parentECP) {
+        parent = parentECP;
     }
 
     @Override
-    public void onEnable() {
-        registerCommandExecutor(cmdExecutor);
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public void onDisable() {
-        super.onDisable(); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

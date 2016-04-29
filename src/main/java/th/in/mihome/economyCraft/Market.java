@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 MoF Development.
+ * Copyright 2016 Kolatat Thangkasemvathana.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,31 +23,59 @@
  */
 package th.in.mihome.economyCraft;
 
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Location;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public class ECPlugin extends JavaPlugin {
+public class Market {
 
-    ECCommandExecutor cmdExecutor = new ECCommandExecutor(this);
+    private final ECPlugin plugin;
 
-    private void registerCommandExecutor(CommandExecutor executor, String... commands) {
-        for (String command : commands) {
-            getCommand(command).setExecutor(executor);
-        }
+    public Market(ECPlugin plugin, Location position, String address, String name, Economy economy) {
+        this.plugin = plugin;
+        this.position = position;
+        this.address = address;
+        this.name = name;
+        this.economy = economy;
+        loadConfig();
     }
 
-    @Override
-    public void onEnable() {
-        registerCommandExecutor(cmdExecutor);
+    private void loadConfig() {
     }
 
-    @Override
-    public void onDisable() {
-        super.onDisable(); //To change body of generated methods, choose Tools | Templates.
+    private final Location position;
+    private final String address;
+    private final String name;
+    private final Economy economy;
+
+    /**
+     * @return the position
+     */
+    public Location getPosition() {
+        return position;
+    }
+
+    /**
+     * @return the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return the economy
+     */
+    public Economy getEconomy() {
+        return economy;
     }
 
 }
