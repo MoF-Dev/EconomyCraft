@@ -65,6 +65,7 @@ public class BankCommandExecutor extends PluginComponent implements CommandExecu
 
                         //add this amount into deposit (SQLLLL)
                         workingItemStack.setAmount(workingItemStack.getAmount() - actualAmount);
+                        amount--;
                     }
                     return true;
                 }
