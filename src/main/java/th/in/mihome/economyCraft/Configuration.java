@@ -23,6 +23,7 @@
  */
 package th.in.mihome.economyCraft;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import th.in.mihome.economyCraft.Options.DatabaseEngine;
 import th.in.mihome.economyCraft.Options.MatchingAlgorithm;
@@ -33,24 +34,36 @@ import th.in.mihome.economyCraft.Options.MatchingAlgorithm;
  */
 public class Configuration {
 
-    public final int EXPORT_PENALTY_LINEAR,
-            EXPORT_PENALTY_SQRT,
-            EXPORT_PENALTY_LOG,
+    public final int TARIFF_LINEAR,
+            TARIFF_SQRT,
+            TARIFF_LOG,
+            TAX_GLOBAL_MARKET,
+            TAX_LOCAL_MARKET,
+            TAX_PRIVATE_MARKET,
             TRADING_QUEUE_INITIAL_SIZE,
             MYSQL_PORT;
 
     public final String MYSQL_HOST,
             MYSQL_DATABASE,
             MYSQL_USER,
-            MYSQL_PASSWORD;
+            MYSQL_PASSWORD,
+            SQLITE_FILE;
 
     public final DatabaseEngine DATABASE_ENGINE;
     public final MatchingAlgorithm MATCHING_ALGORITHM;
+    
+    public final ConfigurationSection COMMODITIES_TAXING;
 
     public Configuration(FileConfiguration config) {
-        EXPORT_PENALTY_LINEAR = config.getInt("economy.exportPenalty.linear");
-        EXPORT_PENALTY_LOG = config.getInt("economy.exportPenalty.log");
-        EXPORT_PENALTY_SQRT = config.getInt("economy.exportPenalty.sqrt");
+        TARIFF_LINEAR = config.getInt("economy.tariff.linear");
+        TARIFF_LOG = config.getInt("economy.tariff.log");
+        TARIFF_SQRT = config.getInt("economy.tariff.sqrt");
+        
+        TAX_GLOBAL_MARKET = config.getInt("economy.taxing.income.global_market");
+        TAX_LOCAL_MARKET = config.getInt("economy.taxing.income.local_market");
+        TAX_PRIVATE_MARKET = config.getInt("economy.taxing.income.private_market");
+        
+        COMMODITIES_TAXING = config.getConfigurationSection("economy.taxing.commodities");
 
         MATCHING_ALGORITHM = MatchingAlgorithm.valueOf(config.getString("exchange.trading.matchingAlgorithm"));
         TRADING_QUEUE_INITIAL_SIZE = config.getInt("exchange.trading.queueInitialSize");
@@ -62,5 +75,7 @@ public class Configuration {
         MYSQL_DATABASE = config.getString("database.mysql.database");
         MYSQL_USER = config.getString("database.mysql.user");
         MYSQL_PASSWORD = config.getString("database.mysql.password");
+
+        SQLITE_FILE = config.getString("database.sqlite.file");
     }
 }

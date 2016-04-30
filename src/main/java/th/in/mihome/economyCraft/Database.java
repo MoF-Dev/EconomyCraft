@@ -27,6 +27,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -58,6 +59,13 @@ public class Database extends PluginComponent implements AutoCloseable {
                     plugin.logException(ex, Level.SEVERE, this);
                 }
                 break;
+            case SQLITE:
+                try {
+                    conn = DriverManager.getConnection("jdbc:sqlite:"
+                            +plugin.config.SQLITE_FILE);
+                } catch (SQLException ex) {
+                    plugin.logException(ex, Level.SEVERE, this);
+                }
         }
 
         if (conn != null) {
