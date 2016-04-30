@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
+package th.in.mihome.economyCraft.trading;
 
 import java.util.Objects;
 import org.bukkit.Material;
@@ -34,8 +34,8 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class ItemID {
 
-    private Material material;
     private short durability;
+    private Material material;
     private ItemMeta meta;
 
     public ItemID(Material material) {
@@ -81,14 +81,11 @@ public class ItemID {
         }
         return true;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 47 * hash + Objects.hashCode(this.getMaterial());
-        hash = 47 * hash + this.getDurability();
-        hash = 47 * hash + Objects.hashCode(this.getMeta());
-        return hash;
+    /**
+     * @return the durability
+     */
+    public short getDurability() {
+        return durability;
     }
 
     /**
@@ -98,18 +95,20 @@ public class ItemID {
         return material;
     }
 
-    /**
-     * @return the durability
-     */
-    public short getDurability() {
-        return durability;
-    }
 
     /**
      * @return the meta
      */
     public ItemMeta getMeta() {
         return meta;
+    }
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 47 * hash + Objects.hashCode(this.getMaterial());
+        hash = 47 * hash + this.getDurability();
+        hash = 47 * hash + Objects.hashCode(this.getMeta());
+        return hash;
     }
 
 }

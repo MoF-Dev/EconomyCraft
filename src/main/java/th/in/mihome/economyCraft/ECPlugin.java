@@ -23,9 +23,14 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.util.ArrayList;
+import th.in.mihome.economyCraft.banking.BankCommandExecutor;
 import java.util.logging.Level;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
+import th.in.mihome.economyCraft.banking.Bank;
+import th.in.mihome.economyCraft.trading.Economy;
+import th.in.mihome.economyCraft.trading.Market;
 
 /**
  *
@@ -37,6 +42,11 @@ public class ECPlugin extends JavaPlugin {
     private BankCommandExecutor bankCmdExecutor;
     public Configuration config;
 
+    private Economy economy;
+
+    ArrayList<Market> markets;
+    ArrayList<Bank> banks;
+
     private void registerCommandExecutor(CommandExecutor executor, Commands... commands) {
         for (Commands command : commands) {
             getCommand(command.getName()).setExecutor(executor);
@@ -47,9 +57,17 @@ public class ECPlugin extends JavaPlugin {
         config = new Configuration(getConfig());
     }
 
+    private void loadPlaces() {
+        markets = loadMarkets();
+        banks = loadBanks();
+    }
+
     @Override
     public void onEnable() {
         loadConfiguration();
+        economy = new Economy(this);
+        loadPlaces();
+
         cmdExecutor = new ECCommandExecutor(this);
         bankCmdExecutor = new BankCommandExecutor(this);
         registerCommandExecutor(cmdExecutor);
@@ -58,11 +76,27 @@ public class ECPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        super.onDisable(); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void logException(Throwable ex, Level level, PluginComponent source) {
         getLogger().log(level, String.format("From [%s]:", source.getClass().getName()), ex);
+    }
+
+    /**
+     * @return the economy
+     */
+    public Economy getEconomy() {
+        return economy;
+    }
+
+    private ArrayList<Market> loadMarkets() {
+        // TODO: implement mee sempaii~~!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private ArrayList<Bank> loadBanks() {
+        // TODO: implement mee sempaii~~!
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

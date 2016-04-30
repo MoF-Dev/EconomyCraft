@@ -25,8 +25,8 @@ package th.in.mihome.economyCraft;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import th.in.mihome.economyCraft.Options.DatabaseEngine;
-import th.in.mihome.economyCraft.Options.MatchingAlgorithm;
+import th.in.mihome.economyCraft.options.DatabaseEngine;
+import th.in.mihome.economyCraft.options.MatchingAlgorithm;
 
 /**
  *
@@ -34,25 +34,24 @@ import th.in.mihome.economyCraft.Options.MatchingAlgorithm;
  */
 public class Configuration {
 
-    public final int TARIFF_LINEAR,
-            TARIFF_SQRT,
-            TARIFF_LOG,
-            TAX_GLOBAL_MARKET,
-            TAX_LOCAL_MARKET,
-            TAX_PRIVATE_MARKET,
-            TRADING_QUEUE_INITIAL_SIZE,
-            MYSQL_PORT;
-
-    public final String MYSQL_HOST,
-            MYSQL_DATABASE,
-            MYSQL_USER,
-            MYSQL_PASSWORD,
-            SQLITE_FILE;
-
-    public final DatabaseEngine DATABASE_ENGINE;
-    public final MatchingAlgorithm MATCHING_ALGORITHM;
-
+    public final double BANK_RADIUS;
     public final ConfigurationSection COMMODITIES_TAXING;
+    public final DatabaseEngine DATABASE_ENGINE;
+    public final double MARKET_RADIUS;
+    public final MatchingAlgorithm MATCHING_ALGORITHM;
+    public final String MYSQL_DATABASE;
+    public final String MYSQL_HOST;
+    public final String MYSQL_PASSWORD;
+    public final int MYSQL_PORT;
+    public final String MYSQL_USER;
+    public final String SQLITE_FILE;
+    public final int TARIFF_LINEAR;
+    public final int TARIFF_LOG;
+    public final int TARIFF_SQRT;
+    public final int TAX_GLOBAL_MARKET;
+    public final int TAX_LOCAL_MARKET;
+    public final int TAX_PRIVATE_MARKET;
+    public final int TRADING_QUEUE_INITIAL_SIZE;
 
     public Configuration(FileConfiguration config) {
         TARIFF_LINEAR = config.getInt("economy.tariff.linear");
@@ -65,8 +64,12 @@ public class Configuration {
 
         COMMODITIES_TAXING = config.getConfigurationSection("economy.taxing.commodities");
 
+        MARKET_RADIUS = config.getDouble("market.radius");
+
         MATCHING_ALGORITHM = MatchingAlgorithm.valueOf(config.getString("exchange.trading.matchingAlgorithm"));
         TRADING_QUEUE_INITIAL_SIZE = config.getInt("exchange.trading.queueInitialSize");
+
+        BANK_RADIUS = config.getDouble("banking.radius");
 
         DATABASE_ENGINE = DatabaseEngine.valueOf(config.getString("database.engine"));
 

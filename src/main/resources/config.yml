@@ -28,12 +28,16 @@ economy:
             machinery: 6
             tool: 3
             
+market:
+    radius: 20
+            
 exchange:
     trading:
         matchingAlgorithm: FIFO
         queueInitialSize: 8
         
 banking:
+    radius: 20
 
 ai:
         

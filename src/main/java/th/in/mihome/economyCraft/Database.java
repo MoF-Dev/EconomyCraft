@@ -34,14 +34,21 @@ import java.util.logging.Level;
  */
 public class Database extends PluginComponent implements AutoCloseable {
 
-    private final Connection connection;
     private boolean connected = false;
+    private final Connection connection;
 
     public Database(ECPlugin plugin) {
         super(plugin);
         connection = getConnection();
     }
 
+
+    @Override
+    public void close() throws Exception {
+        if (connected) {
+            connection.close();
+        }
+    }
     private Connection getConnection() {
         Connection conn = null;
         switch (plugin.config.DATABASE_ENGINE) {
@@ -71,13 +78,6 @@ public class Database extends PluginComponent implements AutoCloseable {
             connected = true;
         }
         return conn;
-    }
-
-    @Override
-    public void close() throws Exception {
-        if (connected) {
-            connection.close();
-        }
     }
 
 }

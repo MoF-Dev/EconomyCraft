@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
+package th.in.mihome.economyCraft.trading;
 
 import org.bukkit.entity.Player;
 
@@ -99,7 +99,7 @@ public class Quote {
         }
 
         double factor = forMarket.getEconomy()
-                .getExportPenalty(getMarket().getPosition(), forMarket.getPosition());
+                .getExportPenalty(getMarket().getLocation(), forMarket.getLocation());
 
         switch (getSide()) {
             case BID:

@@ -23,32 +23,49 @@
  */
 package th.in.mihome.economyCraft;
 
-import org.bukkit.command.Command;
+import org.bukkit.Location;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public enum Commands {
-    DEPOSIT("deposit");
-    
-    public static Commands getCommand(Command cmd) {
-        for (Commands cmds : values()) {
-            if (cmds.name.equalsIgnoreCase(cmd.getName())) {
-                return cmds;
-            }
-        }
-        return null;
-    }
+public abstract class Place extends PluginComponent {
 
-    private final String name;
+    protected Location location;
+    protected String address;
+    protected String name;
 
-    private Commands(String name) {
+    public Place(ECPlugin plugin, String name, Location location, String address) {
+        super(plugin);
+        this.location = location;
+        this.address = address;
         this.name = name;
     }
 
+    public abstract double getRadius();
+
+    public boolean isNear(Location loc) {
+        return getLocation().distance(loc) <= getRadius();
+    }
+
+    /**
+     * @return the location
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     * @return the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * @return the name
+     */
     public String getName() {
         return name;
     }
-
 }

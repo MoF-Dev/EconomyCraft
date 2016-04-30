@@ -21,34 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
+package th.in.mihome.economyCraft.trading;
 
-import org.bukkit.command.Command;
+import org.bukkit.Location;
+import th.in.mihome.economyCraft.ECPlugin;
+import th.in.mihome.economyCraft.Place;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public enum Commands {
-    DEPOSIT("deposit");
-    
-    public static Commands getCommand(Command cmd) {
-        for (Commands cmds : values()) {
-            if (cmds.name.equalsIgnoreCase(cmd.getName())) {
-                return cmds;
-            }
-        }
-        return null;
+public class Market extends Place {
+
+    public Market(ECPlugin plugin, String name, Location location, String address) {
+        super(plugin, name, location, address);
     }
 
-    private final String name;
-
-    private Commands(String name) {
-        this.name = name;
+    public Economy getEconomy() {
+        return plugin.getEconomy();
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public double getRadius() {
+        return plugin.config.MARKET_RADIUS;
     }
 
 }
