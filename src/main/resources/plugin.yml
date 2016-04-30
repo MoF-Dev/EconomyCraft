@@ -1,7 +1,7 @@
-name: EconomyCraftPlugin
+name: ${project.artifactId}Plugin
 main: th.in.mihome.economyCraft.ECPlugin
-version: 1.0.0
-description: EconomyCraft provides basic economic functions as well as AI market players.
+version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
+description: ${project.description}
 load: POSTWORLD
 database: true
 softdepend:

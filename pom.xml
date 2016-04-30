@@ -4,6 +4,7 @@
     <groupId>th.in.mihome</groupId>
     <artifactId>EconomyCraft</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <description>EconomyCraft provides basic economic functions as well as AI market players.</description>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,4 +34,30 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/plugin.yml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>
