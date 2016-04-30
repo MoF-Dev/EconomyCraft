@@ -21,55 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
-
-import org.bukkit.Location;
+package th.in.mihome.economyCraft.Options;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public class Market extends PluginComponent {
-
-    public Market(ECPlugin plugin, Location position, String address, String name, Economy economy) {
-        super(plugin);
-        this.position = position;
-        this.address = address;
-        this.name = name;
-        this.economy = economy;
-    }
-
-    private final Location position;
-    private final String address;
-    private final String name;
-    private final Economy economy;
-
-    /**
-     * @return the position
-     */
-    public Location getPosition() {
-        return position;
-    }
-
-    /**
-     * @return the address
-     */
-    public String getAddress() {
-        return address;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return the economy
-     */
-    public Economy getEconomy() {
-        return economy;
-    }
-
+public enum DatabaseEngine {
+    MYSQL
 }

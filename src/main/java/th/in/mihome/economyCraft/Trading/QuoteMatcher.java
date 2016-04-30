@@ -26,13 +26,18 @@ package th.in.mihome.economyCraft.Trading;
 import java.util.Queue;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.Market;
+import th.in.mihome.economyCraft.PluginComponent;
 import th.in.mihome.economyCraft.Quote;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public abstract class QuoteMatcher {
+public abstract class QuoteMatcher extends PluginComponent {
+
+    public QuoteMatcher(ECPlugin plugin) {
+        super(plugin);
+    }
 
     public abstract Queue<Quote> getBids();
 
@@ -73,16 +78,5 @@ public abstract class QuoteMatcher {
         // assumes same market
         return compare(q1, q2, q1.getMarket());
     }
-    int TRADING_QUEUE_INITIAL_SIZE;
-    final ECPlugin plugin;
 
-    public QuoteMatcher(ECPlugin plugin) {
-        this.plugin = plugin;
-        loadConfig();
-    }
-
-    private void loadConfig() {
-        TRADING_QUEUE_INITIAL_SIZE = plugin.getConfig()
-                .getInt("exchange.trading.queueInitialSize");
-    }
 }

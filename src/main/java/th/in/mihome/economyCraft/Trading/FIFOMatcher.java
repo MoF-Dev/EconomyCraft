@@ -40,8 +40,8 @@ public class FIFOMatcher extends QuoteMatcher {
 
     public FIFOMatcher(ECPlugin plugin) {
         super(plugin);
-        this.offers = new PriorityBlockingQueue<>(TRADING_QUEUE_INITIAL_SIZE, (q1, q2) -> -compare(q1, q2));
-        this.bids = new PriorityBlockingQueue<>(TRADING_QUEUE_INITIAL_SIZE, (q1, q2) -> -compare(q1, q2));
+        this.offers = new PriorityBlockingQueue<>(plugin.config.TRADING_QUEUE_INITIAL_SIZE, (q1, q2) -> -compare(q1, q2));
+        this.bids = new PriorityBlockingQueue<>(plugin.config.TRADING_QUEUE_INITIAL_SIZE, (q1, q2) -> -compare(q1, q2));
     }
 
     @Override

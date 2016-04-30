@@ -23,53 +23,16 @@
  */
 package th.in.mihome.economyCraft;
 
-import org.bukkit.Location;
-
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public class Market extends PluginComponent {
+public abstract class PluginComponent {
 
-    public Market(ECPlugin plugin, Location position, String address, String name, Economy economy) {
-        super(plugin);
-        this.position = position;
-        this.address = address;
-        this.name = name;
-        this.economy = economy;
-    }
+    protected final ECPlugin plugin;
 
-    private final Location position;
-    private final String address;
-    private final String name;
-    private final Economy economy;
-
-    /**
-     * @return the position
-     */
-    public Location getPosition() {
-        return position;
-    }
-
-    /**
-     * @return the address
-     */
-    public String getAddress() {
-        return address;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return the economy
-     */
-    public Economy getEconomy() {
-        return economy;
+    public PluginComponent(ECPlugin plugin) {
+        this.plugin = plugin;
     }
 
 }

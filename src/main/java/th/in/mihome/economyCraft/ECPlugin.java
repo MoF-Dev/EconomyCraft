@@ -23,6 +23,7 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.util.logging.Level;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,7 +33,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class ECPlugin extends JavaPlugin {
 
-    ECCommandExecutor cmdExecutor = new ECCommandExecutor(this);
+    private ECCommandExecutor cmdExecutor;
+    public Configuration config;
 
     private void registerCommandExecutor(CommandExecutor executor, String... commands) {
         for (String command : commands) {
@@ -40,14 +42,24 @@ public class ECPlugin extends JavaPlugin {
         }
     }
 
+    private void loadConfiguration() {
+        config = new Configuration(getConfig());
+    }
+
     @Override
     public void onEnable() {
+        loadConfiguration();
+        cmdExecutor = new ECCommandExecutor(this);
         registerCommandExecutor(cmdExecutor);
     }
 
     @Override
     public void onDisable() {
         super.onDisable(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void logException(Throwable ex, Level level, PluginComponent source) {
+        getLogger().log(level, String.format("From [%s]:", source.getClass().getName()), ex);
     }
 
 }

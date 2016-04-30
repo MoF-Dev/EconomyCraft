@@ -31,12 +31,10 @@ import org.bukkit.command.CommandSender;
  *
  * @author Kolatat Thangkasemvathana
  */
-public class ECCommandExecutor implements CommandExecutor {
+public class ECCommandExecutor extends PluginComponent implements CommandExecutor {
 
-    private final ECPlugin parent;
-
-    public ECCommandExecutor(ECPlugin parentECP) {
-        parent = parentECP;
+    public ECCommandExecutor(ECPlugin plugin) {
+        super(plugin);
     }
 
     @Override

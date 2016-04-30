@@ -33,29 +33,15 @@ import org.bukkit.Location;
  *
  * @author Kolatat Thangkasemvathana
  */
-public class Economy {
-
-    private int sqrtPenalty;
-    private int linearPenalty;
-    private int logPenalty;
-
-    private final ECPlugin plugin;
-
-    public Economy(ECPlugin plugin) {
-        this.plugin = plugin;
-        loadConfig();
-    }
-
-    private void loadConfig() {
-        sqrtPenalty = plugin.getConfig().getInt("economy.exportPenalty.sqrt");
-        linearPenalty = plugin.getConfig().getInt("economy.exportPenalty.linear");
-        logPenalty = plugin.getConfig().getInt("economy.exportPenalty.log");
-
-    }
+public class Economy extends PluginComponent {
 
     private final Map<Set<Location>, Double> exportPenaltyCache = new HashMap<>();
 
     private final Set<Market> markets = new HashSet<>();
+
+    public Economy(ECPlugin plugin) {
+        super(plugin);
+    }
 
     public double getExportPenalty(Location a, Location b) {
         Set<Location> key = new HashSet<>();
@@ -67,7 +53,9 @@ public class Economy {
             double linear = a.distance(b);
             double sqrt = Math.sqrt(linear);
             double log = Math.log(linear);
-            exportPenalty = 1 + linear / linearPenalty + sqrt / sqrtPenalty + log / logPenalty;
+            exportPenalty = 1 + linear / plugin.config.EXPORT_PENALTY_LINEAR
+                    + sqrt / plugin.config.EXPORT_PENALTY_SQRT
+                    + log / plugin.config.EXPORT_PENALTY_LOG;
             exportPenaltyCache.put(key, exportPenalty);
         }
 
