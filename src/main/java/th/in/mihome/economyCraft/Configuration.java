@@ -51,18 +51,18 @@ public class Configuration {
 
     public final DatabaseEngine DATABASE_ENGINE;
     public final MatchingAlgorithm MATCHING_ALGORITHM;
-    
+
     public final ConfigurationSection COMMODITIES_TAXING;
 
     public Configuration(FileConfiguration config) {
         TARIFF_LINEAR = config.getInt("economy.tariff.linear");
         TARIFF_LOG = config.getInt("economy.tariff.log");
         TARIFF_SQRT = config.getInt("economy.tariff.sqrt");
-        
+
         TAX_GLOBAL_MARKET = config.getInt("economy.taxing.income.global_market");
         TAX_LOCAL_MARKET = config.getInt("economy.taxing.income.local_market");
         TAX_PRIVATE_MARKET = config.getInt("economy.taxing.income.private_market");
-        
+
         COMMODITIES_TAXING = config.getConfigurationSection("economy.taxing.commodities");
 
         MATCHING_ALGORITHM = MatchingAlgorithm.valueOf(config.getString("exchange.trading.matchingAlgorithm"));

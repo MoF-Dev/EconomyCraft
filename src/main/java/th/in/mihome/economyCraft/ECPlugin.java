@@ -34,11 +34,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ECPlugin extends JavaPlugin {
 
     private ECCommandExecutor cmdExecutor;
+    private BankCommandExecutor bankCmdExecutor;
     public Configuration config;
 
-    private void registerCommandExecutor(CommandExecutor executor, String... commands) {
-        for (String command : commands) {
-            getCommand(command).setExecutor(executor);
+    private void registerCommandExecutor(CommandExecutor executor, Commands... commands) {
+        for (Commands command : commands) {
+            getCommand(command.getName()).setExecutor(executor);
         }
     }
 
@@ -50,7 +51,9 @@ public class ECPlugin extends JavaPlugin {
     public void onEnable() {
         loadConfiguration();
         cmdExecutor = new ECCommandExecutor(this);
+        bankCmdExecutor = new BankCommandExecutor(this);
         registerCommandExecutor(cmdExecutor);
+        registerCommandExecutor(bankCmdExecutor, Commands.DEPOSIT);
     }
 
     @Override

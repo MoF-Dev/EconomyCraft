@@ -21,25 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package th.in.mihome.economyCraft;
 
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.command.Command;
 
+/**
+ *
+ * @author Kolatat Thangkasemvathana
+ */
+public enum Commands {
+    DEPOSIT("deposit");
 
-public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-	if (cmd.getName().equalsIgnoreCase("withdraw")) {
-		Player player = sender.getPlayer();
-		PlayerInventory inventory = player.getInventory();
-		ItemStack itemPassed = new ItemStack(Material.getMaterial(args[0]), args[1]);
-		if(inventory.contains(Material.getMaterial(args[0]))){
-			ItemStack itemInInventory = new ItemStack(Material.getMaterial(args[0]));
-                        //remove items and add them to database here
-			
-		}
+    private final String name;
 
-		return true;
-	}
-	return false;
+    private Commands(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static Commands getCommand(Command cmd) {
+        for (Commands cmds : values()) {
+            if (cmds.name.equalsIgnoreCase(cmd.getName())) {
+                return cmds;
+            }
+        }
+        return null;
+    }
 }
