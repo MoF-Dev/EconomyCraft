@@ -53,9 +53,9 @@ public class Economy extends PluginComponent {
             double linear = a.distance(b);
             double sqrt = Math.sqrt(linear);
             double log = Math.log(linear);
-            exportPenalty = 1 + linear / plugin.config.EXPORT_PENALTY_LINEAR
-                    + sqrt / plugin.config.EXPORT_PENALTY_SQRT
-                    + log / plugin.config.EXPORT_PENALTY_LOG;
+            exportPenalty = 1 + linear / plugin.config.TARIFF_LINEAR
+                    + sqrt / plugin.config.TARIFF_SQRT
+                    + log / plugin.config.TARIFF_LOG;
             exportPenaltyCache.put(key, exportPenalty);
         }
 
