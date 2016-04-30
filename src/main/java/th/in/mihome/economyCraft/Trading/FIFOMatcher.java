@@ -21,13 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft.Trading;
+package th.in.mihome.economyCraft.trading;
 
 import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
 import th.in.mihome.economyCraft.ECPlugin;
-import th.in.mihome.economyCraft.Market;
-import th.in.mihome.economyCraft.Quote;
 
 /**
  *
