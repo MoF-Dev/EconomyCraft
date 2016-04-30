@@ -1,0 +1,13 @@
+## Default configuration file for the EconomyCraft plugin
+---
+economy:
+    exportPenalty:
+        linear: 4096
+        sqrt: 64
+        log: 32
+
+exchange:
+    trading:
+        matchingAlgorithm: FIFO
+        queueInitialSize: 8
+...

@@ -28,5 +28,5 @@ package th.in.mihome.economyCraft.Options;
  * @author Kolatat Thangkasemvathana
  */
 public enum DatabaseEngine {
-    MYSQL, SQLITE
+    MYSQL
 }
