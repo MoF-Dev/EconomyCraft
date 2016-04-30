@@ -1,0 +1,50 @@
+## Default configuration file for the EconomyCraft plugin
+---
+economy:
+    tariff:
+        linear: 4096
+        sqrt: 64
+        log: 32
+    taxing:
+        income:
+            global_market: 1
+            local_market: 3
+            private_market: 5
+        commodities:
+            energy: 5
+            animal_food: 1
+            animal_luxury: 5
+            animal_non_food: 3
+            plant_food: 0.5
+            plant_non_food: 4
+            plant_luxury: 6
+            other_food: 1
+            ore: 1
+            mineral: 2
+            precious_mineral: 7
+            luxury: 10
+            alcohol: 15
+            electronic: 5
+            machinery: 6
+            tool: 3
+            
+exchange:
+    trading:
+        matchingAlgorithm: FIFO
+        queueInitialSize: 8
+        
+banking:
+
+ai:
+        
+database:
+    engine: MYSQL
+    mysql:
+        host: host
+        port: port
+        database: db
+        user: user
+        password: pwd
+    sqlite:
+        file: economyCraft.db
+...
