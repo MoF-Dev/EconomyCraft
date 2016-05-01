@@ -22,7 +22,8 @@
  * THE SOFTWARE.
  */
 package th.in.mihome.economyCraft.banking;
-
+import java.util.HashMap;
+import java.util.Iterator;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -54,22 +55,25 @@ public class BankCommandExecutor extends ECAbstractCommandExecutor {
     private void deposit(Player player, String[] args) {
         int amount = Integer.parseInt(args[1]);
         if (amount <= 0) {
-            player.sendMessage("You are guanteen.");
+            player.sendMessage("You are guanteen.");//wew
             return;
         }
-
+        // Check for valid amount argument
+        
         Bank bank = getNearestBank(player);
         if (!bank.isNear(player.getLocation())) {
             player.sendMessage("This command may not be performed outside of a bank.");
             return;
         }
-
+        // Check location for valid bank
+        
         PlayerInventory inventory = player.getInventory();
         // maybe need to add the damage data and others.
         ItemStack itemPassed = new ItemStack(Material.getMaterial(args[0]), amount);
         ItemStack leftOver = inventory.removeItem(itemPassed).get(0);
-        int amountRemoved = itemPassed.getAmount() - (leftOver == null ? 0 : leftOver.getAmount());
-
+        int amountRemoved = itemPassed.getAmount() - (leftOver == null ? 0 : leftOver.getAmount());    
+        // Removes item from inventory
+        
         if (!publishDeposit(player, itemPassed, amountRemoved, bank)) {
             // not success so return items removed
             itemPassed.setAmount(amountRemoved);
@@ -80,13 +84,43 @@ public class BankCommandExecutor extends ECAbstractCommandExecutor {
         }
     }
     
+    private void withdraw(Player player, String[] args){
+        int amount = Integer.parseInt(args[1]);
+        if (amount <= 0) {
+            player.sendMessage("You are guanteen.");//weeew
+            return;
+        }
+        
+        Bank bank = getNearestBank(player);
+        if (!bank.isNear(player.getLocation())) {
+            player.sendMessage("This command may not be performed outside of a bank.");
+            return;
+        }
+        // Check location for valid bank
+        
+        ItemStack itemPassed = new ItemStack(Material.getMaterial(args[0]), amount);
+
+        if (itemInBank(itemPassed)){
+            
+        }
+        PlayerInventory inventory = player.getInventory();
+        // maybe need to add the damage data and others.
+        inventory.addItem(itemPassed);
+        // Adds item from inventory
+    }
+    
     private Bank getNearestBank(Player player) {
-        // TODO: implement mee sempaii~~!
+        // TODO: implement mee senpaii~~!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    private boolean itemInBank(ItemStack itemPassed){
+        // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private boolean publishDeposit(Player player, ItemStack item, int amount, Bank bank) {
-        // TODO: implement mee sempaii~~!
+        // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
