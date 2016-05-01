@@ -23,51 +23,31 @@
  */
 package th.in.mihome.economyCraft;
 
-import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public abstract class Place extends PluginComponent {
+public class MainCommandExecutor extends AbstractCommandExecutor {
 
-    protected final String address;
-    protected final int id;
-    protected final Location location;
-    protected final String name;
-
-    public Place(ECPlugin plugin, int id, String name, Location location, String address) {
+    public MainCommandExecutor(ECPlugin plugin) {
         super(plugin);
-        this.id = id;
-        this.location = location;
-        this.address = address;
-        this.name = name;
     }
 
-    /**
-     * @return the address
-     */
-    public String getAddress() {
-        return address;
-    }
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        switch (Commands.getCommand(command)) {
+            case DEBUG1:
+                Player player = requirePlayer(sender);
+                if (player != null) {
 
-    /**
-     * @return the location
-     */
-    public Location getLocation() {
-        return location;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    public abstract double getRadius();
-
-    public boolean isNear(Location loc) {
-        return getLocation().distance(loc) <= getRadius();
+                }
+                return true;
+            default:
+                return false;
+        }
     }
 }

@@ -37,6 +37,7 @@ public class Market extends Place {
 
     public Market(ECPlugin plugin, ResultSet rs) throws SQLException {
         this(plugin,
+                rs.getInt("id"),
                 rs.getString("name"),
                 new Location(plugin.getServer().getWorld(rs.getString("world")),
                         rs.getDouble("x"),
@@ -45,8 +46,8 @@ public class Market extends Place {
                 rs.getString("address"));
     }
 
-    public Market(ECPlugin plugin, String name, Location location, String address) {
-        super(plugin, name, location, address);
+    public Market(ECPlugin plugin, int id, String name, Location location, String address) {
+        super(plugin, id, name, location, address);
     }
 
     public ECEconomy getEconomy() {
@@ -57,9 +58,9 @@ public class Market extends Place {
     public double getRadius() {
         return plugin.config.MARKET_RADIUS;
     }
-    
-    public boolean isValid(){
-        return location.getBlock().getType()==plugin.config.MARKET_CORNERSTONE;
+
+    public boolean isValid() {
+        return location.getBlock().getType() == plugin.config.MARKET_CORNERSTONE;
     }
 
 }

@@ -81,6 +81,7 @@ public class ItemID {
         }
         return true;
     }
+
     /**
      * @return the durability
      */
@@ -95,13 +96,13 @@ public class ItemID {
         return material;
     }
 
-
     /**
      * @return the meta
      */
     public ItemMeta getMeta() {
         return meta;
     }
+
     @Override
     public int hashCode() {
         int hash = 5;

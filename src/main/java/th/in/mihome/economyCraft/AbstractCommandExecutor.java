@@ -31,12 +31,12 @@ import org.bukkit.entity.Player;
  *
  * @author Kolatat Thangkasemvathana
  */
-public abstract class ECAbstractCommandExecutor extends PluginComponent implements CommandExecutor {
+public abstract class AbstractCommandExecutor extends PluginComponent implements CommandExecutor {
 
-    public ECAbstractCommandExecutor(ECPlugin plugin) {
+    public AbstractCommandExecutor(ECPlugin plugin) {
         super(plugin);
     }
-    
+
     public static Player requirePlayer(CommandSender sender) {
         if (sender instanceof Player) {
             return (Player) sender;

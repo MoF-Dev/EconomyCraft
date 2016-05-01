@@ -25,7 +25,6 @@ package th.in.mihome.economyCraft.database;
 
 import java.sql.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.PluginComponent;
 
@@ -37,14 +36,13 @@ public class Database extends PluginComponent implements AutoCloseable {
 
     private boolean connected = false;
     private final Connection connection;
-    
+
     private Statement selectStmt;
 
     public Database(ECPlugin plugin) {
         super(plugin);
         connection = newConnection();
     }
-
 
     @Override
     public void close() throws Exception {
@@ -59,8 +57,8 @@ public class Database extends PluginComponent implements AutoCloseable {
     public boolean isConnected() {
         return connected;
     }
-    
-    public boolean isValid(){
+
+    public boolean isValid() {
         try {
             return connection.isValid(plugin.config.DATABASE_TIMEOUT);
         } catch (SQLException ex) {
@@ -68,15 +66,15 @@ public class Database extends PluginComponent implements AutoCloseable {
             return false;
         }
     }
-    
-    public Connection getConnection(){
+
+    public Connection getConnection() {
         return connection;
     }
-    
-    public SelectStatement select(){
+
+    public SelectStatement select() {
         return new SelectStatement(selectStmt);
     }
-    
+
     private Connection newConnection() {
         Connection conn = null;
         switch (plugin.config.DATABASE_ENGINE) {

@@ -89,7 +89,7 @@ public class Configuration {
         MYSQL_PASSWORD = config.getString("database.mysql.password");
 
         SQLITE_FILE = config.getString("database.sqlite.file");
-        
+
         TABLE_MARKETS = config.getString("database.tables.markets");
         TABLE_BANKS = config.getString("database.tables.banks");
     }

@@ -21,37 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
+package th.in.mihome.economyCraft.trading;
 
-import java.util.Set;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import th.in.mihome.economyCraft.AbstractCommandExecutor;
+import th.in.mihome.economyCraft.Commands;
+import th.in.mihome.economyCraft.ECPlugin;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public class ECCommandExecutor extends ECAbstractCommandExecutor {
+public class TradingCommandExecutor extends AbstractCommandExecutor {
 
-    public ECCommandExecutor(ECPlugin plugin) {
+    public TradingCommandExecutor(ECPlugin plugin) {
         super(plugin);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        switch(Commands.getCommand(command)){
-            case DEBUG1:
-                Player player = requirePlayer(sender);
-                if(player!=null){
-                    
-                }
-                return true;
+        switch (Commands.getCommand(command)) {
+            case BID:
+            case OFFER:
+            case REMOVE_BID:
+            case REMOVE_OFFER:
+            case LIST_QUOTES:
             default:
                 return false;
         }
     }
+
 }

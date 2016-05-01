@@ -29,5 +29,5 @@ package th.in.mihome.economyCraft;
  * @param <T>
  */
 public interface SQLSerializable<T> {
-    
+
 }

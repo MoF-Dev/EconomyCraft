@@ -22,9 +22,8 @@
  * THE SOFTWARE.
  */
 package th.in.mihome.economyCraft.banking;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.math.*;
+
+import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -33,7 +32,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import th.in.mihome.economyCraft.*;
 
-public class BankCommandExecutor extends ECAbstractCommandExecutor {
+public class BankCommandExecutor extends AbstractCommandExecutor {
 
     public BankCommandExecutor(ECPlugin plugin) {
         super(plugin);
@@ -60,21 +59,21 @@ public class BankCommandExecutor extends ECAbstractCommandExecutor {
             return;
         }
         // Check for valid amount argument
-        
+
         Bank bank = getNearestBank(player);
         if (!bank.isNear(player.getLocation())) {
             player.sendMessage("This command may not be performed outside of a bank.");
             return;
         }
         // Check location for valid bank
-        
+
         PlayerInventory inventory = player.getInventory();
         // maybe need to add the damage data and others.
         ItemStack itemPassed = new ItemStack(Material.getMaterial(args[0]), amount);
         ItemStack leftOver = inventory.removeItem(itemPassed).get(0);
-        int amountRemoved = itemPassed.getAmount() - (leftOver == null ? 0 : leftOver.getAmount());    
+        int amountRemoved = itemPassed.getAmount() - (leftOver == null ? 0 : leftOver.getAmount());
         // Removes item from inventory
-        
+
         if (!publishDeposit(player, itemPassed, amountRemoved, bank)) {
             // not success so return items removed
             itemPassed.setAmount(amountRemoved);
@@ -84,65 +83,67 @@ public class BankCommandExecutor extends ECAbstractCommandExecutor {
             }
         }
     }
-    
-    private void withdraw(Player player, String[] args){
+
+    private ItemStack getItemInBank(ItemStack itemPassed, Bank bank, Player player) {
+        // TODO: implement mee senpaii~~!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void withdraw(Player player, String[] args) {
         int amount = Integer.parseInt(args[1]);
         if (amount <= 0) {
             player.sendMessage("You are guanteen.");//weeew
             return;
         }
-        
+
         Bank bank = getNearestBank(player);
         if (!bank.isNear(player.getLocation())) {
             player.sendMessage("This command may not be performed outside of a bank.");
             return;
         }
         // Check location for valid nearby bank
-        
+
         ItemStack itemPassed = new ItemStack(Material.getMaterial(args[0]), amount);
         PlayerInventory inventory = player.getInventory();
-        ItemStack returnedItem = itemInBank(itemPassed);
-        if (returnedItem.getAmount() > itemPassed.getAmount()){
-            int amountWithdrawn = Math.min(returnedItem.getAmount(), itemPassed.getAmount());
-            ItemStack leftover = new ItemStack(Material.getMaterial(args[0]), returnedItem.getAmount() - itemPassed.getAmount());
-            ItemStack itemAdded = new ItemStack(Material.getMaterial(args[0]), amountWithdrawn);
-            inventory.addItem(itemAdded);
-            
-             if(!publishWithdraw(player, itemAdded, amountWithdrawn, bank)){
-                itemPassed.setAmount(amountWithdrawn);
-                inventory.remove(itemPassed);
-             }
+        ItemStack returnedItem = getItemInBank(itemPassed, bank, player);
+        if (returnedItem.getAmount() > 0) {
+            // withdraw then add then return
+            if (publishWithdraw(player, returnedItem, returnedItem.getAmount(), bank)) {
+                ItemStack errorStack = inventory.addItem(returnedItem).get(0);
+                if (errorStack != null) {
+                    // redeposit items
+                    if (!publishDeposit(player, errorStack, errorStack.getAmount(), bank)) {
+                        // not enough room in inventory and cannot redeposit gg no re
+                    }
+                }
+            } else {
+                // cannot withdraw
+            }
         }
-        else {
-            inventory.addItem(itemPassed);
-            if(!publishWithdraw(player, itemPassed, amount, bank)){
-                itemPassed.setAmount(amount);
-                inventory.remove(itemPassed);
-             }
-        }
-        
-      
-        // Adds item from inventory
     }
-    
+
     private Bank getNearestBank(Player player) {
-        // TODO: implement mee senpaii~~!
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    private ItemStack itemInBank(ItemStack itemPassed){
-        // TODO: implement mee senpaii~~!
-        throw new UnsupportedOperationException("Not supported yet.");
+        Bank nearestBank = null;
+        double nearestDistance = Double.POSITIVE_INFINITY;
+        ArrayList<Bank> banks = plugin.getBanks();
+        for (Bank bank : banks) {
+            double distance = player.getLocation().distance(bank.getLocation());
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestBank = bank;
+            }
+        }
+        return nearestBank;
     }
 
     private boolean publishDeposit(Player player, ItemStack item, int amount, Bank bank) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private boolean publishWithdraw(Player player, ItemStack item, int amount, Bank bank) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 }

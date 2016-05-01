@@ -39,6 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import th.in.mihome.economyCraft.banking.Bank;
 import th.in.mihome.economyCraft.trading.ECEconomy;
 import th.in.mihome.economyCraft.trading.Market;
+import th.in.mihome.economyCraft.trading.TradingCommandExecutor;
 
 /**
  *
@@ -48,8 +49,9 @@ public class ECPlugin extends JavaPlugin {
 
     private Chat chat;
 
-    private ECCommandExecutor cmdExecutor;
+    private MainCommandExecutor mainCmdExecutor;
     private BankCommandExecutor bankCmdExecutor;
+    private TradingCommandExecutor tradeCmdExecutor;
     public Configuration config;
     private Database database;
 
@@ -58,17 +60,24 @@ public class ECPlugin extends JavaPlugin {
     private Economy vaultEconomy;
 
     ArrayList<Market> markets;
-    ArrayList<Bank> banks;
+    private ArrayList<Bank> banks;
+
+    /**
+     * @return the banks
+     */
+    public ArrayList<Bank> getBanks() {
+        return banks;
+    }
 
     private void loadDependencies() {
-        if(!setupEconomy()){
+        if (!setupEconomy()) {
             getLogger().severe("Disabled due to no Vault dependency found!");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
         setupPermissions();
         setupChat();
-        if(!setupDatabase()){
+        if (!setupDatabase()) {
             getLogger().severe("Disabled due to database connection failure!");
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -96,10 +105,13 @@ public class ECPlugin extends JavaPlugin {
         loadDependencies();
         loadPlaces();
 
-        cmdExecutor = new ECCommandExecutor(this);
+        mainCmdExecutor = new MainCommandExecutor(this);
         bankCmdExecutor = new BankCommandExecutor(this);
-        registerCommandExecutor(cmdExecutor, Commands.DEBUG1);
+        tradeCmdExecutor = new TradingCommandExecutor(this);
+        registerCommandExecutor(mainCmdExecutor, Commands.DEBUG1);
         registerCommandExecutor(bankCmdExecutor, Commands.DEPOSIT);
+        registerCommandExecutor(tradeCmdExecutor, Commands.BID, Commands.OFFER,
+                Commands.REMOVE_BID, Commands.REMOVE_OFFER, Commands.LIST_QUOTES);
     }
 
     @Override
@@ -121,9 +133,9 @@ public class ECPlugin extends JavaPlugin {
         ArrayList<Market> raw = new ArrayList<>();
         try {
             ResultSet rs = database.select().columns().from(config.TABLE_MARKETS).execute();
-            while(rs.next()){
-                Market toAdd = new Market(this,rs);
-                if(toAdd.isValid()){
+            while (rs.next()) {
+                Market toAdd = new Market(this, rs);
+                if (toAdd.isValid()) {
                     raw.add(toAdd);
                 } else {
                     // TODO remove from db
@@ -132,7 +144,7 @@ public class ECPlugin extends JavaPlugin {
         } catch (SQLException ex) {
             Logger.getLogger(ECPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return raw;
     }
 
@@ -140,13 +152,13 @@ public class ECPlugin extends JavaPlugin {
         ArrayList<Bank> raw = new ArrayList<>();
         try {
             ResultSet rs = database.select().columns().from(config.TABLE_BANKS).execute();
-            while(rs.next()){
-                raw.add(new Bank(this,rs));
+            while (rs.next()) {
+                raw.add(new Bank(this, rs));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ECPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return raw;
     }
 
@@ -162,11 +174,11 @@ public class ECPlugin extends JavaPlugin {
     }
 
     private boolean setupEconomy() {
-        if(getServer().getPluginManager().getPlugin("Vault")==null){
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp==null){
+        if (rsp == null) {
             return false;
         }
         vaultEconomy = rsp.getProvider();

@@ -41,7 +41,7 @@ public class ECEconomy extends PluginComponent {
     private final Map<Set<Location>, Double> exportPenaltyCache = new HashMap<>();
 
     private final Set<Market> markets = new HashSet<>();
-    
+
     private final Economy engine;
 
     public ECEconomy(ECPlugin plugin, Economy vaultEconomy) {

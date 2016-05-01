@@ -33,6 +33,7 @@ import java.util.StringJoiner;
  * @author Kolatat Thangkasemvathana
  */
 public class SelectStatement {
+
     private String qualifier = "";
     private String columns[];
     private String from = "";
@@ -41,35 +42,35 @@ public class SelectStatement {
     protected SelectStatement(Statement stmt) {
         this.stmt = stmt;
     }
-    
-    public SelectStatement distinct(){
+
+    public SelectStatement distinct() {
         qualifier = "distinct";
         return this;
     }
-    
-    public SelectStatement all(){
+
+    public SelectStatement all() {
         qualifier = "all";
         return this;
     }
-    
-    public SelectStatement columns(){
+
+    public SelectStatement columns() {
         return columns("*");
     }
-    
-    public SelectStatement columns(String... columns){
-        this.columns=columns;
+
+    public SelectStatement columns(String... columns) {
+        this.columns = columns;
         return this;
     }
-    
-    public SelectStatement from(String table){
+
+    public SelectStatement from(String table) {
         from = table;
         return this;
     }
-    
-    public ResultSet execute() throws SQLException{
+
+    public ResultSet execute() throws SQLException {
         StringJoiner sj = new StringJoiner(", ");
-        for(String col : columns){
-            sj.add("`"+col+"`");
+        for (String col : columns) {
+            sj.add("`" + col + "`");
         }
         String sql = String.format("select %s %s from `%s`", qualifier, sj.toString(), from);
         return stmt.executeQuery(sql);
