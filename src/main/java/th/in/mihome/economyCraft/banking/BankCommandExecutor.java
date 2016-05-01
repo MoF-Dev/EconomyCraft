@@ -24,6 +24,7 @@
 package th.in.mihome.economyCraft.banking;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.math.*;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -96,16 +97,31 @@ public class BankCommandExecutor extends ECAbstractCommandExecutor {
             player.sendMessage("This command may not be performed outside of a bank.");
             return;
         }
-        // Check location for valid bank
+        // Check location for valid nearby bank
         
         ItemStack itemPassed = new ItemStack(Material.getMaterial(args[0]), amount);
-
-        if (itemInBank(itemPassed)){
-            
-        }
         PlayerInventory inventory = player.getInventory();
-        // maybe need to add the damage data and others.
-        inventory.addItem(itemPassed);
+        ItemStack returnedItem = itemInBank(itemPassed);
+        if (returnedItem.getAmount() > itemPassed.getAmount()){
+            int amountWithdrawn = Math.min(returnedItem.getAmount(), itemPassed.getAmount());
+            ItemStack leftover = new ItemStack(Material.getMaterial(args[0]), returnedItem.getAmount() - itemPassed.getAmount());
+            ItemStack itemAdded = new ItemStack(Material.getMaterial(args[0]), amountWithdrawn);
+            inventory.addItem(itemAdded);
+            
+             if(!publishWithdraw(player, itemAdded, amountWithdrawn, bank)){
+                itemPassed.setAmount(amountWithdrawn);
+                inventory.remove(itemPassed);
+             }
+        }
+        else {
+            inventory.addItem(itemPassed);
+            if(!publishWithdraw(player, itemPassed, amount, bank)){
+                itemPassed.setAmount(amount);
+                inventory.remove(itemPassed);
+             }
+        }
+        
+      
         // Adds item from inventory
     }
     
@@ -114,12 +130,17 @@ public class BankCommandExecutor extends ECAbstractCommandExecutor {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    private boolean itemInBank(ItemStack itemPassed){
+    private ItemStack itemInBank(ItemStack itemPassed){
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private boolean publishDeposit(Player player, ItemStack item, int amount, Bank bank) {
+        // TODO: implement mee senpaii~~!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    private boolean publishWithdraw(Player player, ItemStack item, int amount, Bank bank) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }
