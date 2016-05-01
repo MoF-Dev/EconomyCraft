@@ -23,13 +23,21 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.sql.ResultSet;
+import th.in.mihome.economyCraft.database.Database;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import th.in.mihome.economyCraft.banking.BankCommandExecutor;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import th.in.mihome.economyCraft.banking.Bank;
-import th.in.mihome.economyCraft.trading.Economy;
+import th.in.mihome.economyCraft.trading.ECEconomy;
 import th.in.mihome.economyCraft.trading.Market;
 
 /**
@@ -38,14 +46,34 @@ import th.in.mihome.economyCraft.trading.Market;
  */
 public class ECPlugin extends JavaPlugin {
 
+    private Chat chat;
+
     private ECCommandExecutor cmdExecutor;
     private BankCommandExecutor bankCmdExecutor;
     public Configuration config;
+    private Database database;
 
-    private Economy economy;
+    private ECEconomy economy;
+    private Permission permission;
+    private Economy vaultEconomy;
 
     ArrayList<Market> markets;
     ArrayList<Bank> banks;
+
+    private void loadDependencies() {
+        if(!setupEconomy()){
+            getLogger().severe("Disabled due to no Vault dependency found!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        setupPermissions();
+        setupChat();
+        if(!setupDatabase()){
+            getLogger().severe("Disabled due to database connection failure!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+    }
 
     private void registerCommandExecutor(CommandExecutor executor, Commands... commands) {
         for (Commands command : commands) {
@@ -65,12 +93,12 @@ public class ECPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         loadConfiguration();
-        economy = new Economy(this);
+        loadDependencies();
         loadPlaces();
 
         cmdExecutor = new ECCommandExecutor(this);
         bankCmdExecutor = new BankCommandExecutor(this);
-        registerCommandExecutor(cmdExecutor);
+        registerCommandExecutor(cmdExecutor, Commands.DEBUG1);
         registerCommandExecutor(bankCmdExecutor, Commands.DEPOSIT);
     }
 
@@ -85,18 +113,71 @@ public class ECPlugin extends JavaPlugin {
     /**
      * @return the economy
      */
-    public Economy getEconomy() {
+    public ECEconomy getEconomy() {
         return economy;
     }
 
     private ArrayList<Market> loadMarkets() {
-        // TODO: implement mee sempaii~~!
-        throw new UnsupportedOperationException("Not supported yet.");
+        ArrayList<Market> raw = new ArrayList<>();
+        try {
+            ResultSet rs = database.select().columns().from(config.TABLE_MARKETS).execute();
+            while(rs.next()){
+                Market toAdd = new Market(this,rs);
+                if(toAdd.isValid()){
+                    raw.add(toAdd);
+                } else {
+                    // TODO remove from db
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ECPlugin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return raw;
     }
 
     private ArrayList<Bank> loadBanks() {
-        // TODO: implement mee sempaii~~!
-        throw new UnsupportedOperationException("Not supported yet.");
+        ArrayList<Bank> raw = new ArrayList<>();
+        try {
+            ResultSet rs = database.select().columns().from(config.TABLE_BANKS).execute();
+            while(rs.next()){
+                raw.add(new Bank(this,rs));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ECPlugin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return raw;
+    }
+
+    private boolean setupChat() {
+        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+        chat = rsp.getProvider();
+        return chat != null;
+    }
+
+    private boolean setupDatabase() {
+        database = new Database(this);
+        return database.isValid();
+    }
+
+    private boolean setupEconomy() {
+        if(getServer().getPluginManager().getPlugin("Vault")==null){
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if(rsp==null){
+            return false;
+        }
+        vaultEconomy = rsp.getProvider();
+        economy = new ECEconomy(this, vaultEconomy);
+        return true;
+    }
+
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        permission = rsp.getProvider();
+        return permission != null;
     }
 
 }

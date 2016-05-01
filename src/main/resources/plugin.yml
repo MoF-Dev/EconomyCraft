@@ -4,8 +4,9 @@ version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVer
 description: ${project.description}
 load: POSTWORLD
 database: true
-softdepend:
+softdepend: [Vault]
 commands:
+    debug1:
     market_bid:
         description: Creates a bidding for an item in the nearest market.
         aliases: [newbid, bid, buy]

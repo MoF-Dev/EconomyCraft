@@ -23,6 +23,8 @@
  */
 package th.in.mihome.economyCraft.trading;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.bukkit.Location;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.Place;
@@ -33,17 +35,31 @@ import th.in.mihome.economyCraft.Place;
  */
 public class Market extends Place {
 
+    public Market(ECPlugin plugin, ResultSet rs) throws SQLException {
+        this(plugin,
+                rs.getString("name"),
+                new Location(plugin.getServer().getWorld(rs.getString("world")),
+                        rs.getDouble("x"),
+                        rs.getDouble("y"),
+                        rs.getDouble("z")),
+                rs.getString("address"));
+    }
+
     public Market(ECPlugin plugin, String name, Location location, String address) {
         super(plugin, name, location, address);
     }
 
-    public Economy getEconomy() {
+    public ECEconomy getEconomy() {
         return plugin.getEconomy();
     }
 
     @Override
     public double getRadius() {
         return plugin.config.MARKET_RADIUS;
+    }
+    
+    public boolean isValid(){
+        return location.getBlock().getType()==plugin.config.MARKET_CORNERSTONE;
     }
 
 }

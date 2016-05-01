@@ -25,16 +25,13 @@ package th.in.mihome.economyCraft.banking;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import th.in.mihome.economyCraft.Commands;
-import th.in.mihome.economyCraft.ECPlugin;
-import th.in.mihome.economyCraft.PluginComponent;
+import th.in.mihome.economyCraft.*;
 
-public class BankCommandExecutor extends PluginComponent implements CommandExecutor {
+public class BankCommandExecutor extends ECAbstractCommandExecutor {
 
     public BankCommandExecutor(ECPlugin plugin) {
         super(plugin);
@@ -93,12 +90,4 @@ public class BankCommandExecutor extends PluginComponent implements CommandExecu
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    private Player requirePlayer(CommandSender sender) {
-        if (sender instanceof Player) {
-            return (Player) sender;
-        } else {
-            sender.sendMessage("You must be a player to use this command.");
-            return null;
-        }
-    }
 }

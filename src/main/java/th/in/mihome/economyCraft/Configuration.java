@@ -23,6 +23,7 @@
  */
 package th.in.mihome.economyCraft;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import th.in.mihome.economyCraft.options.DatabaseEngine;
@@ -44,7 +45,10 @@ public class Configuration {
     public final String MYSQL_PASSWORD;
     public final int MYSQL_PORT;
     public final String MYSQL_USER;
+    public final int DATABASE_TIMEOUT;
     public final String SQLITE_FILE;
+    public final String TABLE_MARKETS;
+    public final String TABLE_BANKS;
     public final int TARIFF_LINEAR;
     public final int TARIFF_LOG;
     public final int TARIFF_SQRT;
@@ -52,6 +56,8 @@ public class Configuration {
     public final int TAX_LOCAL_MARKET;
     public final int TAX_PRIVATE_MARKET;
     public final int TRADING_QUEUE_INITIAL_SIZE;
+    public final Material BANK_CORNERSTONE;
+    public final Material MARKET_CORNERSTONE;
 
     public Configuration(FileConfiguration config) {
         TARIFF_LINEAR = config.getInt("economy.tariff.linear");
@@ -65,13 +71,16 @@ public class Configuration {
         COMMODITIES_TAXING = config.getConfigurationSection("economy.taxing.commodities");
 
         MARKET_RADIUS = config.getDouble("market.radius");
+        MARKET_CORNERSTONE = Material.valueOf(config.getString("market.cornerstone"));
 
         MATCHING_ALGORITHM = MatchingAlgorithm.valueOf(config.getString("exchange.trading.matchingAlgorithm"));
         TRADING_QUEUE_INITIAL_SIZE = config.getInt("exchange.trading.queueInitialSize");
 
         BANK_RADIUS = config.getDouble("banking.radius");
+        BANK_CORNERSTONE = Material.valueOf(config.getString("banking.cornerstone"));
 
         DATABASE_ENGINE = DatabaseEngine.valueOf(config.getString("database.engine"));
+        DATABASE_TIMEOUT = config.getInt("database.timeout");
 
         MYSQL_HOST = config.getString("database.mysql.host");
         MYSQL_PORT = config.getInt("database.mysql.port");
@@ -80,5 +89,8 @@ public class Configuration {
         MYSQL_PASSWORD = config.getString("database.mysql.password");
 
         SQLITE_FILE = config.getString("database.sqlite.file");
+        
+        TABLE_MARKETS = config.getString("database.tables.markets");
+        TABLE_BANKS = config.getString("database.tables.banks");
     }
 }

@@ -23,7 +23,12 @@
  */
 package th.in.mihome.economyCraft.banking;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.Place;
 
@@ -32,6 +37,16 @@ import th.in.mihome.economyCraft.Place;
  * @author Kolatat Thangkasemvathana
  */
 public class Bank extends Place {
+    
+    public Bank(ECPlugin plugin, ResultSet rs) throws SQLException{
+        this(plugin,
+                rs.getString("name"),
+                new Location(plugin.getServer().getWorld(rs.getString("world")),
+                        rs.getDouble("x"),
+                        rs.getDouble("y"),
+                        rs.getDouble("z")),
+                rs.getString("address"));
+    }
 
     public Bank(ECPlugin plugin, String name, Location location, String address) {
         super(plugin, name, location, address);
@@ -40,5 +55,9 @@ public class Bank extends Place {
     @Override
     public double getRadius() {
         return plugin.config.BANK_RADIUS;
+    }
+    
+    public boolean isValid(){
+        return location.getBlock().getType()==plugin.config.BANK_CORNERSTONE;
     }
 }

@@ -27,9 +27,10 @@ economy:
             electronic: 5
             machinery: 6
             tool: 3
-            
+
 market:
     radius: 20
+    cornerstone: IRON_BLOCK
             
 exchange:
     trading:
@@ -38,11 +39,13 @@ exchange:
         
 banking:
     radius: 20
+    cornerstone: DIAMOND_BLOCK
 
 ai:
         
 database:
     engine: MYSQL
+    timeout: 5
     mysql:
         host: host
         port: port
@@ -51,4 +54,7 @@ database:
         password: pwd
     sqlite:
         file: economyCraft.db
+    tables:
+        markets: ec_markets
+        banks: ec_banks
 ...

@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
+package th.in.mihome.economyCraft.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import th.in.mihome.economyCraft.ECPlugin;
+import th.in.mihome.economyCraft.PluginComponent;
 
 /**
  *
@@ -36,20 +37,47 @@ public class Database extends PluginComponent implements AutoCloseable {
 
     private boolean connected = false;
     private final Connection connection;
+    
+    private Statement selectStmt;
 
     public Database(ECPlugin plugin) {
         super(plugin);
-        connection = getConnection();
+        connection = newConnection();
     }
 
 
     @Override
     public void close() throws Exception {
-        if (connected) {
+        if (isConnected()) {
             connection.close();
         }
     }
-    private Connection getConnection() {
+
+    /**
+     * @return the connected
+     */
+    public boolean isConnected() {
+        return connected;
+    }
+    
+    public boolean isValid(){
+        try {
+            return connection.isValid(plugin.config.DATABASE_TIMEOUT);
+        } catch (SQLException ex) {
+            plugin.logException(ex, Level.WARNING, this);
+            return false;
+        }
+    }
+    
+    public Connection getConnection(){
+        return connection;
+    }
+    
+    public SelectStatement select(){
+        return new SelectStatement(selectStmt);
+    }
+    
+    private Connection newConnection() {
         Connection conn = null;
         switch (plugin.config.DATABASE_ENGINE) {
             case MYSQL:
@@ -75,7 +103,12 @@ public class Database extends PluginComponent implements AutoCloseable {
         }
 
         if (conn != null) {
-            connected = true;
+            try {
+                selectStmt = connection.createStatement();
+                connected = true;
+            } catch (SQLException ex) {
+                plugin.logException(ex, Level.SEVERE, this);
+            }
         }
         return conn;
     }

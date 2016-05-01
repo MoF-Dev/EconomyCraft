@@ -30,7 +30,8 @@ import org.bukkit.command.Command;
  * @author Kolatat Thangkasemvathana
  */
 public enum Commands {
-    DEPOSIT("deposit");
+    DEPOSIT("deposit"),
+    DEBUG1("debug1");
     
     public static Commands getCommand(Command cmd) {
         for (Commands cmds : values()) {

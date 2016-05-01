@@ -23,35 +23,11 @@
  */
 package th.in.mihome.economyCraft;
 
-import java.util.Set;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 /**
  *
  * @author Kolatat Thangkasemvathana
+ * @param <T>
  */
-public class ECCommandExecutor extends ECAbstractCommandExecutor {
-
-    public ECCommandExecutor(ECPlugin plugin) {
-        super(plugin);
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        switch(Commands.getCommand(command)){
-            case DEBUG1:
-                Player player = requirePlayer(sender);
-                if(player!=null){
-                    
-                }
-                return true;
-            default:
-                return false;
-        }
-    }
+public interface SQLSerializable<T> {
+    
 }

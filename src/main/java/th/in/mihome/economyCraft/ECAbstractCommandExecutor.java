@@ -21,53 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft.trading;
+package th.in.mihome.economyCraft;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import org.bukkit.Location;
-import th.in.mihome.economyCraft.ECPlugin;
-import th.in.mihome.economyCraft.PluginComponent;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public class Economy extends PluginComponent {
+public abstract class ECAbstractCommandExecutor extends PluginComponent implements CommandExecutor {
 
-    private final Map<Set<Location>, Double> exportPenaltyCache = new HashMap<>();
-
-    private final Set<Market> markets = new HashSet<>();
-
-    public Economy(ECPlugin plugin) {
+    public ECAbstractCommandExecutor(ECPlugin plugin) {
         super(plugin);
     }
-
-    public double getExportPenalty(Location a, Location b) {
-        Set<Location> key = new HashSet<>();
-        key.add(a);
-        key.add(b);
-
-        Double exportPenalty = exportPenaltyCache.get(key);
-        if (exportPenalty == null) {
-            double linear = a.distance(b);
-            double sqrt = Math.sqrt(linear);
-            double log = Math.log(linear);
-            exportPenalty = 1 + linear / plugin.config.TARIFF_LINEAR
-                    + sqrt / plugin.config.TARIFF_SQRT
-                    + log / plugin.config.TARIFF_LOG;
-            exportPenaltyCache.put(key, exportPenalty);
+    
+    public static Player requirePlayer(CommandSender sender) {
+        if (sender instanceof Player) {
+            return (Player) sender;
+        } else {
+            sender.sendMessage("You must be a player to use this command.");
+            return null;
         }
-
-        return exportPenalty;
-    }
-
-    /**
-     * @return the markets
-     */
-    public Set<Market> getMarkets() {
-        return markets;
     }
 }

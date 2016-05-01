@@ -21,37 +21,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
+package th.in.mihome.economyCraft.database;
 
-import java.util.Set;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.StringJoiner;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public class ECCommandExecutor extends ECAbstractCommandExecutor {
+public class SelectStatement {
+    private String qualifier = "";
+    private String columns[];
+    private String from = "";
+    private final Statement stmt;
 
-    public ECCommandExecutor(ECPlugin plugin) {
-        super(plugin);
+    protected SelectStatement(Statement stmt) {
+        this.stmt = stmt;
     }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        switch(Commands.getCommand(command)){
-            case DEBUG1:
-                Player player = requirePlayer(sender);
-                if(player!=null){
-                    
-                }
-                return true;
-            default:
-                return false;
+    
+    public SelectStatement distinct(){
+        qualifier = "distinct";
+        return this;
+    }
+    
+    public SelectStatement all(){
+        qualifier = "all";
+        return this;
+    }
+    
+    public SelectStatement columns(){
+        return columns("*");
+    }
+    
+    public SelectStatement columns(String... columns){
+        this.columns=columns;
+        return this;
+    }
+    
+    public SelectStatement from(String table){
+        from = table;
+        return this;
+    }
+    
+    public ResultSet execute() throws SQLException{
+        StringJoiner sj = new StringJoiner(", ");
+        for(String col : columns){
+            sj.add("`"+col+"`");
         }
+        String sql = String.format("select %s %s from `%s`", qualifier, sj.toString(), from);
+        return stmt.executeQuery(sql);
     }
 }
