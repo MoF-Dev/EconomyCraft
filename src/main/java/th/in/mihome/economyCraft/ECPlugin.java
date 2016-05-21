@@ -24,10 +24,8 @@
 package th.in.mihome.economyCraft;
 
 import java.sql.ResultSet;
-import th.in.mihome.economyCraft.database.Database;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import th.in.mihome.economyCraft.banking.BankCommandExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.milkbowl.vault.chat.Chat;
@@ -37,6 +35,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import th.in.mihome.economyCraft.banking.Bank;
+import th.in.mihome.economyCraft.banking.BankCommandExecutor;
+import th.in.mihome.economyCraft.database.Database;
 import th.in.mihome.economyCraft.trading.ECEconomy;
 import th.in.mihome.economyCraft.trading.Market;
 import th.in.mihome.economyCraft.trading.TradingCommandExecutor;
@@ -46,21 +46,20 @@ import th.in.mihome.economyCraft.trading.TradingCommandExecutor;
  * @author Kolatat Thangkasemvathana
  */
 public class ECPlugin extends JavaPlugin {
-
-    private Chat chat;
-
-    private MainCommandExecutor mainCmdExecutor;
-    private BankCommandExecutor bankCmdExecutor;
-    private TradingCommandExecutor tradeCmdExecutor;
     public Configuration config;
+
+    private BankCommandExecutor bankCmdExecutor;
+    private ArrayList<Bank> banks;
+    private Chat chat;
     private Database database;
 
     private ECEconomy economy;
+    private MainCommandExecutor mainCmdExecutor;
     private Permission permission;
+    private TradingCommandExecutor tradeCmdExecutor;
     private Economy vaultEconomy;
 
     ArrayList<Market> markets;
-    private ArrayList<Bank> banks;
 
     /**
      * @return the banks
@@ -68,35 +67,17 @@ public class ECPlugin extends JavaPlugin {
     public ArrayList<Bank> getBanks() {
         return banks;
     }
-
-    private void loadDependencies() {
-        if (!setupEconomy()) {
-            getLogger().severe("Disabled due to no Vault dependency found!");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-        setupPermissions();
-        setupChat();
-        if (!setupDatabase()) {
-            getLogger().severe("Disabled due to database connection failure!");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+    /**
+     * @return the economy
+     */
+    public ECEconomy getEconomy() {
+        return economy;
     }
-
-    private void registerCommandExecutor(CommandExecutor executor, Commands... commands) {
-        for (Commands command : commands) {
-            getCommand(command.getName()).setExecutor(executor);
-        }
+    public void logException(Throwable ex, Level level, PluginComponent source) {
+        getLogger().log(level, String.format("From [%s]:", source.getClass().getName()), ex);
     }
-
-    private void loadConfiguration() {
-        config = new Configuration(getConfig());
-    }
-
-    private void loadPlaces() {
-        markets = loadMarkets();
-        banks = loadBanks();
+    @Override
+    public void onDisable() {
     }
 
     @Override
@@ -113,20 +94,35 @@ public class ECPlugin extends JavaPlugin {
         registerCommandExecutor(tradeCmdExecutor, Commands.BID, Commands.OFFER,
                 Commands.REMOVE_BID, Commands.REMOVE_OFFER, Commands.LIST_QUOTES);
     }
-
-    @Override
-    public void onDisable() {
+    private ArrayList<Bank> loadBanks() {
+        ArrayList<Bank> raw = new ArrayList<>();
+        try {
+            ResultSet rs = database.select().columns().from(config.TABLE_BANKS).execute();
+            while (rs.next()) {
+                raw.add(new Bank(this, rs));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ECPlugin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return raw;
     }
-
-    public void logException(Throwable ex, Level level, PluginComponent source) {
-        getLogger().log(level, String.format("From [%s]:", source.getClass().getName()), ex);
+    private void loadConfiguration() {
+        config = new Configuration(this, getConfig());
     }
-
-    /**
-     * @return the economy
-     */
-    public ECEconomy getEconomy() {
-        return economy;
+    private void loadDependencies() {
+        if (!setupEconomy()) {
+            getLogger().severe("Disabled due to no Vault dependency found!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        setupPermissions();
+        setupChat();
+        if (!setupDatabase()) {
+            getLogger().severe("Disabled due to database connection failure!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
     }
 
     private ArrayList<Market> loadMarkets() {
@@ -147,19 +143,14 @@ public class ECPlugin extends JavaPlugin {
 
         return raw;
     }
-
-    private ArrayList<Bank> loadBanks() {
-        ArrayList<Bank> raw = new ArrayList<>();
-        try {
-            ResultSet rs = database.select().columns().from(config.TABLE_BANKS).execute();
-            while (rs.next()) {
-                raw.add(new Bank(this, rs));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ECPlugin.class.getName()).log(Level.SEVERE, null, ex);
+    private void loadPlaces() {
+        markets = loadMarkets();
+        banks = loadBanks();
+    }
+    private void registerCommandExecutor(CommandExecutor executor, Commands... commands) {
+        for (Commands command : commands) {
+            getCommand(command.getName()).setExecutor(executor);
         }
-
-        return raw;
     }
 
     private boolean setupChat() {

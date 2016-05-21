@@ -23,19 +23,20 @@
  */
 package th.in.mihome.economyCraft;
 
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
 public class ECItem {
+
     private final int id;
     private final int damage;
     private final String displayName;
     private final String minecraftName;
     private final int pathWeight;
-    private final ItemStack mcItem;
+    private final Material material;
 
     public ECItem(int id, int damage, String displayName, String minecraftName, int pathWeight) {
         this.id = id;
@@ -43,7 +44,7 @@ public class ECItem {
         this.displayName = displayName;
         this.minecraftName = minecraftName;
         this.pathWeight = pathWeight;
-        mcItem = new ItemStack(id, 1, (short) damage);
+        material = Material.getMaterial(minecraftName);
     }
 
     /**
@@ -68,10 +69,10 @@ public class ECItem {
     }
 
     /**
-     * @return the mcItem
+     * @return the material
      */
-    public ItemStack getMcItem() {
-        return mcItem.clone();
+    public Material getMaterial() {
+        return material;
     }
 
     /**
@@ -87,5 +88,5 @@ public class ECItem {
     public int getPathWeight() {
         return pathWeight;
     }
-    
+
 }

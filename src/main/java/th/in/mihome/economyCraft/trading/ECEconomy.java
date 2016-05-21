@@ -23,12 +23,10 @@
  */
 package th.in.mihome.economyCraft.trading;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
+import th.in.mihome.economyCraft.ECItem;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.PluginComponent;
 
@@ -37,12 +35,12 @@ import th.in.mihome.economyCraft.PluginComponent;
  * @author Kolatat Thangkasemvathana
  */
 public class ECEconomy extends PluginComponent {
+    private final Economy engine;
 
     private final Map<Set<Location>, Double> exportPenaltyCache = new HashMap<>();
 
     private final Set<Market> markets = new HashSet<>();
 
-    private final Economy engine;
 
     public ECEconomy(ECPlugin plugin, Economy vaultEconomy) {
         super(plugin);
@@ -57,6 +55,14 @@ public class ECEconomy extends PluginComponent {
     }
 
     public double getExportPenalty(Location a, Location b) {
+        // TODO lon change this to weighted shortest path
+        /* EXAMPLE */
+        
+        ECItem i1 = plugin.config.getItemInfo(a.getBlock().getType());
+        int weight = i1.getPathWeight();
+        // if blahblahblah is min then this is the path to go...
+        
+        
         Set<Location> key = new HashSet<>();
         key.add(a);
         key.add(b);

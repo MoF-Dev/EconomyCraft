@@ -41,8 +41,8 @@ import th.in.mihome.economyCraft.options.MatchingAlgorithm;
  *
  * @author Kolatat Thangkasemvathana
  */
-public class Configuration {
-
+public class Configuration extends PluginComponent {
+    
     public final double BANK_RADIUS;
     public final ConfigurationSection COMMODITIES_TAXING;
     public final DatabaseEngine DATABASE_ENGINE;
@@ -67,13 +67,13 @@ public class Configuration {
     public final int TRADING_QUEUE_INITIAL_SIZE;
     public final Material BANK_CORNERSTONE;
     public final Material MARKET_CORNERSTONE;
-
-    private final HashMap<ItemStack, ECItem> itemDatabase;
-
-    public ECItem getItemInfo(ItemStack is) {
-        return itemDatabase.get(is);
+    
+    private final HashMap<Material, ECItem> itemDatabase;
+    
+    public ECItem getItemInfo(Material material) {
+        return itemDatabase.get(material);
     }
-
+    
     private void readItemDb() {
         try {
             CSVReader reader = new CSVReader(new FileReader("blockdb.csv"));
@@ -91,47 +91,49 @@ public class Configuration {
                         nextLine[3],
                         pathWeight
                 );
-                itemDatabase.put(item.getMcItem(), item);
+                itemDatabase.put(item.getMaterial(), item);
             }
         } catch (IOException ex) {
-            Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null, ex);
+            plugin.logException(ex, Level.SEVERE, this);
         }
     }
-
-    public Configuration(FileConfiguration config) {
+    
+    public Configuration(ECPlugin plugin, FileConfiguration config) {
+        super(plugin);
+        
         itemDatabase = new HashMap<>(300);
         readItemDb();
-
+        
         TARIFF_LINEAR = config.getInt("economy.tariff.linear");
         TARIFF_LOG = config.getInt("economy.tariff.log");
         TARIFF_SQRT = config.getInt("economy.tariff.sqrt");
-
+        
         TAX_GLOBAL_MARKET = config.getInt("economy.taxing.income.global_market");
         TAX_LOCAL_MARKET = config.getInt("economy.taxing.income.local_market");
         TAX_PRIVATE_MARKET = config.getInt("economy.taxing.income.private_market");
-
+        
         COMMODITIES_TAXING = config.getConfigurationSection("economy.taxing.commodities");
-
+        
         MARKET_RADIUS = config.getDouble("market.radius");
         MARKET_CORNERSTONE = Material.valueOf(config.getString("market.cornerstone"));
-
+        
         MATCHING_ALGORITHM = MatchingAlgorithm.valueOf(config.getString("exchange.trading.matchingAlgorithm"));
         TRADING_QUEUE_INITIAL_SIZE = config.getInt("exchange.trading.queueInitialSize");
-
+        
         BANK_RADIUS = config.getDouble("banking.radius");
         BANK_CORNERSTONE = Material.valueOf(config.getString("banking.cornerstone"));
-
+        
         DATABASE_ENGINE = DatabaseEngine.valueOf(config.getString("database.engine"));
         DATABASE_TIMEOUT = config.getInt("database.timeout");
-
+        
         MYSQL_HOST = config.getString("database.mysql.host");
         MYSQL_PORT = config.getInt("database.mysql.port");
         MYSQL_DATABASE = config.getString("database.mysql.database");
         MYSQL_USER = config.getString("database.mysql.user");
         MYSQL_PASSWORD = config.getString("database.mysql.password");
-
+        
         SQLITE_FILE = config.getString("database.sqlite.file");
-
+        
         TABLE_MARKETS = config.getString("database.tables.markets");
         TABLE_BANKS = config.getString("database.tables.banks");
         TABLE_TRANSACTIONS = config.getString("database.tables.transactions");
