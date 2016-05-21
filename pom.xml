@@ -27,16 +27,16 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.9.2-R0.1-SNAPSHOT</version>
+            <version>1.9.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--Bukkit API-->
+        <!--Bukkit API--><!-- spigotmc.org said no need to use bukkit? [
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.9.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>]-->
         <!--VaultAPI-->
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -44,6 +44,13 @@
             <version>1.5</version>
             <scope>provided</scope>
         </dependency>
+        <!-- http://mvnrepository.com/artifact/com.opencsv/opencsv -->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>3.3</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

@@ -23,9 +23,17 @@
  */
 package th.in.mihome.economyCraft;
 
+import com.opencsv.CSVReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 import th.in.mihome.economyCraft.options.DatabaseEngine;
 import th.in.mihome.economyCraft.options.MatchingAlgorithm;
 
@@ -49,6 +57,7 @@ public class Configuration {
     public final String SQLITE_FILE;
     public final String TABLE_MARKETS;
     public final String TABLE_BANKS;
+    public final String TABLE_TRANSACTIONS;
     public final int TARIFF_LINEAR;
     public final int TARIFF_LOG;
     public final int TARIFF_SQRT;
@@ -59,7 +68,40 @@ public class Configuration {
     public final Material BANK_CORNERSTONE;
     public final Material MARKET_CORNERSTONE;
 
+    private final HashMap<ItemStack, ECItem> itemDatabase;
+
+    public ECItem getItemInfo(ItemStack is) {
+        return itemDatabase.get(is);
+    }
+
+    private void readItemDb() {
+        try {
+            CSVReader reader = new CSVReader(new FileReader("blockdb.csv"));
+            String[] nextLine;
+            reader.readNext();
+            while ((nextLine = reader.readNext()) != null) {
+                int pathWeight = Short.MAX_VALUE;
+                if (!nextLine[4].isEmpty()) {
+                    pathWeight = Integer.parseInt(nextLine[4]);
+                }
+                ECItem item = new ECItem(
+                        Integer.parseInt(nextLine[0]),
+                        Integer.parseInt(nextLine[1]),
+                        nextLine[2],
+                        nextLine[3],
+                        pathWeight
+                );
+                itemDatabase.put(item.getMcItem(), item);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public Configuration(FileConfiguration config) {
+        itemDatabase = new HashMap<>(300);
+        readItemDb();
+
         TARIFF_LINEAR = config.getInt("economy.tariff.linear");
         TARIFF_LOG = config.getInt("economy.tariff.log");
         TARIFF_SQRT = config.getInt("economy.tariff.sqrt");
@@ -92,5 +134,6 @@ public class Configuration {
 
         TABLE_MARKETS = config.getString("database.tables.markets");
         TABLE_BANKS = config.getString("database.tables.banks");
+        TABLE_TRANSACTIONS = config.getString("database.tables.transactions");
     }
 }

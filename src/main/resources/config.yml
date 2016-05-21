@@ -57,4 +57,5 @@ database:
     tables:
         markets: ec_markets
         banks: ec_banks
+        transactions: ec_transactions
 ...
