@@ -23,6 +23,8 @@
  */
 package th.in.mihome.economyCraft.trading;
 
+import java.util.Collections;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.PluginComponent;
@@ -33,8 +35,11 @@ import th.in.mihome.economyCraft.PluginComponent;
  */
 public abstract class QuoteMatcher extends PluginComponent {
 
-    public QuoteMatcher(ECPlugin plugin) {
+    Market market;
+
+    public QuoteMatcher(ECPlugin plugin, Market market) {
         super(plugin);
+        this.market = market;
     }
 
     public abstract Queue<Quote> getBids();
@@ -74,7 +79,7 @@ public abstract class QuoteMatcher extends PluginComponent {
      */
     public int compare(Quote q1, Quote q2) {
         // assumes same market
-        return compare(q1, q2, q1.getMarket());
+        return compare(q1, q2, null);
     }
 
 }

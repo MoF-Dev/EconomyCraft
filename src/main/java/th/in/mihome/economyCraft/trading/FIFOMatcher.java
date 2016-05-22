@@ -36,14 +36,17 @@ public class FIFOMatcher extends QuoteMatcher {
     private final Queue<Quote> bids;
     private final Queue<Quote> offers;
 
-    public FIFOMatcher(ECPlugin plugin) {
-        super(plugin);
-        this.offers = new PriorityBlockingQueue<>(plugin.config.TRADING_QUEUE_INITIAL_SIZE, (q1, q2) -> -compare(q1, q2));
-        this.bids = new PriorityBlockingQueue<>(plugin.config.TRADING_QUEUE_INITIAL_SIZE, (q1, q2) -> -compare(q1, q2));
+    public FIFOMatcher(ECPlugin plugin, Market market) {
+        super(plugin, market);
+        this.offers = new PriorityBlockingQueue<>(plugin.config.TRADING_QUEUE_INITIAL_SIZE, (q1, q2) -> -compare(q1, q2, market));
+        this.bids = new PriorityBlockingQueue<>(plugin.config.TRADING_QUEUE_INITIAL_SIZE, (q1, q2) -> -compare(q1, q2, market));
     }
 
     @Override
     public int compare(Quote q1, Quote q2, Market m) {
+        if (m == null) {
+            m = q1.getMarket();
+        }
         // quote is assumed to be of same side
 
         // c is big when q1 is big

@@ -52,6 +52,10 @@ public class ECPlugin extends JavaPlugin {
     private ArrayList<Bank> banks;
     private Chat chat;
     private Database database;
+    
+    public Database getDb(){
+        return database;
+    }
 
     private ECEconomy economy;
     private MainCommandExecutor mainCmdExecutor;

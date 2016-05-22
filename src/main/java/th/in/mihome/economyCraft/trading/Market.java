@@ -25,15 +25,25 @@ package th.in.mihome.economyCraft.trading;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.Place;
+import th.in.mihome.economyCraft.database.Transaction;
+import th.in.mihome.economyCraft.database.TransactionResult;
+import th.in.mihome.economyCraft.database.TransactionType;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
 public class Market extends Place {
+
+    HashMap<ItemStack, QuoteMatcher> matchers = new HashMap<>();
 
     public Market(ECPlugin plugin, ResultSet rs) throws SQLException {
         this(plugin,
@@ -61,6 +71,95 @@ public class Market extends Place {
 
     public boolean isValid() {
         return location.getBlock().getType() == plugin.config.MARKET_CORNERSTONE;
+    }
+
+    public Quote seeBest(ItemStack type, Quote.Side side) {
+        QuoteMatcher matcher = matchers.get(type);
+        if (matcher == null) {
+            return null;
+        }
+        switch (side) {
+            case BID:
+                return matcher.getBids().peek();
+            case OFFER:
+                return matcher.getOffers().peek();
+            default:
+                return null;
+        }
+    }
+
+    public void list(Quote q) {
+        QuoteMatcher matcher = matchers.get(q.getItem());
+        if (matcher == null) {
+            matcher = plugin.getEconomy().newMatcher(this);
+            matchers.put(q.getItem(), matcher);
+        }
+        switch (q.getSide()) {
+            case BID:
+                matcher.getBids().add(q);
+                break;
+            case OFFER:
+                matcher.getOffers().add(q);
+                break;
+        }
+    }
+    
+    public void unlist(Quote q){
+        QuoteMatcher matcher = matchers.get(q.getItem());
+        if(matcher!=null){
+            switch(q.getSide()){
+                case BID:
+                    matcher.getBids().remove(q);
+                    break;
+                case OFFER:
+                    matcher.getOffers().remove(q);
+                    break;
+            }
+        }
+    }
+
+    public void match() {
+        for (Entry<ItemStack, QuoteMatcher> itemEntry : matchers.entrySet()) {
+            if(itemEntry.getValue().getBids().isEmpty() || itemEntry.getValue().getOffers().isEmpty()) continue;
+            Quote tmpQuote;
+            ArrayList<Quote> bids = new ArrayList<>();
+            ArrayList<Quote> offers = new ArrayList<>();
+            for (Market market : plugin.getEconomy().getMarkets()) {
+                tmpQuote = market.seeBest(itemEntry.getKey(), Quote.Side.BID);
+                if (tmpQuote != null) {
+                    bids.add(tmpQuote);
+                }
+                tmpQuote = market.seeBest(itemEntry.getKey(), Quote.Side.OFFER);
+                if (tmpQuote != null) {
+                    offers.add(tmpQuote);
+                }
+            }
+            Quote bestBid = Collections.max(bids, (q1, q2) -> itemEntry.getValue().compare(q1, q2, this));
+            Quote bestOffer = Collections.max(offers, (q1, q2) -> itemEntry.getValue().compare(q1, q2, this));
+            assert(bestBid.getItem().isSimilar(bestOffer.getItem()));
+            bestBid.getMarket().unlist(bestBid);
+            bestOffer.getMarket().unlist(bestOffer);
+            
+            int bid = bestBid.getValue();
+            int xBid = bestBid.getValue(this);
+            int offer = bestOffer.getValue();
+            int xOffer = bestOffer.getValue(this);
+            int tp = Math.abs(offer-xOffer);
+            
+            if(offer+tp >= bid){
+                // theres a match
+                int quant = Math.min(bestBid.getQuantity(), bestOffer.getQuantity());
+                int realAmount = offer*quant;
+                int realTp = tp*quant;
+                Transaction t = new Transaction(TransactionType.PURCHASE, bestBid.getTrader(), bestOffer.getTrader(), realAmount);
+                TransactionResult tr = plugin.getDb().process(t);
+                if(tr.isSuccess()){
+                    plugin.getEconomy().centralLogistics.deliver(bestOffer.getMarket().getLocation(), bestBid.getMarket().getLocation(), bestBid.getTrader(), realTp);
+                    
+                }
+                
+            }
+        }
     }
 
 }

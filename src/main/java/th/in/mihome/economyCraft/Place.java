@@ -23,6 +23,7 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.util.Collection;
 import org.bukkit.Location;
 
 /**
@@ -69,5 +70,43 @@ public abstract class Place extends PluginComponent {
 
     public boolean isNear(Location loc) {
         return getLocation().distance(loc) <= getRadius();
+    }
+    
+    /**
+     * Get the nearest place to a location.
+     * @param <T> The type of place.
+     * @param from The location from which you are comparing the distance.
+     * @param places A collection of all the places to choose from.
+     * @return A place from the collection that has the least distance from from,
+     *         or null if the collection is empty.
+     */
+    public static <T extends Place> T getNearest(Location from, Collection<T> places){
+        T nearest = null;
+        double nearestDistance = Double.POSITIVE_INFINITY;
+        for (T place : places) {
+            double distance = from.distance(place.getLocation());
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearest = place;
+            }
+        }
+        return nearest;
+    }
+    
+    /**
+     * Get the nearest valid place to a location.
+     * @param <T> The type of place.
+     * @param from The location from which to compare the distances.
+     * @param places A collection of all the places.
+     * @return The closest valid place to the given location, or null if there
+     *         is no valid place in the collection.
+     */
+    public static <T extends Place> T getValidNearest(Location from, Collection<T> places){
+        T nearest = getNearest(from,places);
+        if(nearest.isNear(from)){
+            return nearest;
+        } else {
+            return null;
+        }
     }
 }

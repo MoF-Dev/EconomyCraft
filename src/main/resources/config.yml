@@ -5,6 +5,7 @@ economy:
         linear: 4096
         sqrt: 64
         log: 32
+        account: Govt_TP_Dept
     taxing:
         income:
             global_market: 1

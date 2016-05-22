@@ -35,16 +35,26 @@ import th.in.mihome.economyCraft.PluginComponent;
  * @author Kolatat Thangkasemvathana
  */
 public class ECEconomy extends PluginComponent {
+    
+    Logistics centralLogistics;
+
     private final Economy engine;
 
     private final Map<Set<Location>, Double> exportPenaltyCache = new HashMap<>();
 
     private final Set<Market> markets = new HashSet<>();
 
-
     public ECEconomy(ECPlugin plugin, Economy vaultEconomy) {
         super(plugin);
         engine = vaultEconomy;
+    }
+    
+    public void match(){
+        List<Market> markets = new ArrayList<>(this.markets);
+        Collections.shuffle(markets);
+        markets.stream().forEach((m) -> {
+            m.match();
+        });
     }
 
     /**
@@ -54,15 +64,25 @@ public class ECEconomy extends PluginComponent {
         return engine;
     }
 
+    QuoteMatcher globalMatcher = newMatcher(null);
+
+    public QuoteMatcher newMatcher(Market market) {
+        switch (plugin.config.MATCHING_ALGORITHM) {
+            case FIFO:
+                return new FIFOMatcher(plugin, market);
+            default:
+                return null;
+        }
+    }
+
     public double getExportPenalty(Location a, Location b) {
         // TODO lon change this to weighted shortest path
         /* EXAMPLE */
-        
+
         ECItem i1 = plugin.config.getItemInfo(a.getBlock().getType());
         int weight = i1.getPathWeight();
         // if blahblahblah is min then this is the path to go...
-        
-        
+
         Set<Location> key = new HashSet<>();
         key.add(a);
         key.add(b);

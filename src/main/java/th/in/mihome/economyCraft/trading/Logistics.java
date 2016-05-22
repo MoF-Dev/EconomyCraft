@@ -21,37 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
+package th.in.mihome.economyCraft.trading;
 
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public abstract class AbstractCommandExecutor extends PluginComponent implements CommandExecutor {
-
-    public AbstractCommandExecutor(ECPlugin plugin) {
-        super(plugin);
-    }
-
-    /**
-     * Get the command sender as a player.
-     * 
-     * Warn the sender if they are not a player.
-     * 
-     * @param sender The sender of the command.
-     * @return The player who sends the command, or null if the sender is not a
-     *         player.
-     */
-    public static Player requirePlayer(CommandSender sender) {
-        if (sender instanceof Player) {
-            return (Player) sender;
-        } else {
-            sender.sendMessage("You must be a player to use this command.");
-            return null;
-        }
+public class Logistics {
+    public void deliver(Location l1, Location l2, Player p, int pay){
     }
 }
