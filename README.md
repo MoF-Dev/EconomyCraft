@@ -7,4 +7,4 @@ EconomyCraft is a Spigot economy plugin that provides basic economic functions a
 - Taxing
 - AI players
 
-For more details, please visit our [Wiki](/kolatat/EconomyCraft/wiki).
+For more details, please visit our [Wiki](//github.com/kolatat/EconomyCraft/wiki).
