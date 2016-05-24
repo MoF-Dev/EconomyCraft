@@ -23,6 +23,11 @@
  */
 package th.in.mihome.economyCraft;
 
+import th.in.mihome.economyCraft.trading.commands.OfferCommand;
+import th.in.mihome.economyCraft.trading.commands.BuyCommand;
+import th.in.mihome.economyCraft.trading.commands.RemoveQuoteCommand;
+import th.in.mihome.economyCraft.trading.commands.ListQuotesCommand;
+import th.in.mihome.economyCraft.trading.commands.BidCommand;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,11 +40,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import th.in.mihome.economyCraft.banking.Bank;
-import th.in.mihome.economyCraft.banking.BankCommandExecutor;
+import th.in.mihome.economyCraft.banking.commands.DepositCommand;
+import th.in.mihome.economyCraft.banking.commands.WithdrawCommand;
 import th.in.mihome.economyCraft.database.Database;
-import th.in.mihome.economyCraft.trading.ECEconomy;
-import th.in.mihome.economyCraft.trading.Market;
-import th.in.mihome.economyCraft.trading.TradingCommandExecutor;
+import th.in.mihome.economyCraft.trading.*;
 
 /**
  *
@@ -49,18 +53,14 @@ public class ECPlugin extends JavaPlugin {
 
     public Configuration config;
 
-    private BankCommandExecutor bankCmdExecutor;
     private ArrayList<Bank> banks;
     private Chat chat;
     private Database database;
-
+    private Economy moneyProvider;
     private ECEconomy economy;
-    private MainCommandExecutor mainCmdExecutor;
     private Permission permission;
-    private TradingCommandExecutor tradeCmdExecutor;
-    private Economy vaultEconomy;
 
-    ArrayList<Market> markets;
+    private ArrayList<Market> markets;
 
     /**
      * @return the banks
@@ -80,6 +80,20 @@ public class ECPlugin extends JavaPlugin {
         return economy;
     }
 
+    /**
+     * @return the markets
+     */
+    public ArrayList<Market> getMarkets() {
+        return markets;
+    }
+
+    /**
+     * @return the moneyProvider
+     */
+    public Economy getMoneyProvider() {
+        return moneyProvider;
+    }
+
     public void logException(Throwable ex, Level level, PluginComponent source) {
         getLogger().log(level, String.format("From [%s]:", source.getClass().getName()), ex);
     }
@@ -93,14 +107,7 @@ public class ECPlugin extends JavaPlugin {
         loadConfiguration();
         loadDependencies();
         loadPlaces();
-
-        mainCmdExecutor = new MainCommandExecutor(this);
-        bankCmdExecutor = new BankCommandExecutor(this);
-        tradeCmdExecutor = new TradingCommandExecutor(this);
-        registerCommandExecutor(mainCmdExecutor, Commands.DEBUG1);
-        registerCommandExecutor(bankCmdExecutor, Commands.DEPOSIT);
-        registerCommandExecutor(tradeCmdExecutor, Commands.BID, Commands.OFFER,
-                Commands.REMOVE_QUOTE, Commands.LIST_QUOTES);
+        registerCommands();
     }
 
     private ArrayList<Bank> loadBanks() {
@@ -176,6 +183,17 @@ public class ECPlugin extends JavaPlugin {
         }
     }
 
+    private void registerCommands() {
+        registerCommandExecutor(new BidCommand(this), Commands.BID);
+        registerCommandExecutor(new BuyCommand(this), Commands.BUY);
+        registerCommandExecutor(new OfferCommand(this), Commands.OFFER);
+        registerCommandExecutor(new ListQuotesCommand(this), Commands.LIST_QUOTES);
+        registerCommandExecutor(new RemoveQuoteCommand(this), Commands.REMOVE_QUOTE);
+
+        registerCommandExecutor(new DepositCommand(this), Commands.DEPOSIT);
+        registerCommandExecutor(new WithdrawCommand(this), Commands.WITHDRAW);
+    }
+
     private boolean setupChat() {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
         chat = rsp.getProvider();
@@ -195,8 +213,8 @@ public class ECPlugin extends JavaPlugin {
         if (rsp == null) {
             return false;
         }
-        vaultEconomy = rsp.getProvider();
-        economy = new ECEconomy(this, vaultEconomy);
+        moneyProvider = rsp.getProvider();
+        economy = new ECEconomy(this);
         return true;
     }
 

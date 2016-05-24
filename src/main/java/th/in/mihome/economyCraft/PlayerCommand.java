@@ -23,38 +23,32 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.util.logging.Level;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public enum Commands {
-    DEPOSIT("deposit"),
-    BID("market_bid"),
-    OFFER("market_offer"),
-    REMOVE_QUOTE("remove_market_bit"),
-    LIST_QUOTES("list_market_quotes"),
-    WITHDRAW("withdraw"),
-    BUY("market_buy");
+public abstract class PlayerCommand extends AbstractCommandExecutor{
 
-    public static Commands getCommand(Command cmd) {
-        for (Commands cmds : values()) {
-            if (cmds.name.equalsIgnoreCase(cmd.getName())) {
-                return cmds;
-            }
+    public PlayerCommand(ECPlugin plugin) {
+        super(plugin);
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        try {
+            Player player = requirePlayer(sender);
+            return onPlayerCommand(player, command, label, args);
+        } catch(NonPlayerException ex){
+            logAndTellSender(sender, Level.INFO, ex, this);
+            return false;
         }
-        return null;
     }
-
-    private final String name;
-
-    private Commands(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
+    
+    public abstract boolean onPlayerCommand(Player sender, Command command, String label, String[] args);
+    
 }

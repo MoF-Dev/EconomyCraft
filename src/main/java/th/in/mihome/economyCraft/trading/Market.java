@@ -127,7 +127,7 @@ public class Market extends Place {
             Quote tmpQuote;
             ArrayList<Quote> bids = new ArrayList<>();
             ArrayList<Quote> offers = new ArrayList<>();
-            for (Market market : plugin.getEconomy().getMarkets()) {
+            for (Market market : plugin.getMarkets()) {
                 tmpQuote = market.seeBest(itemEntry.getKey(), Quote.Side.BID);
                 if (tmpQuote != null) {
                     bids.add(tmpQuote);
@@ -165,17 +165,17 @@ public class Market extends Place {
         }
     }
 
-    void buy(Player player, ItemStack item, int value) {
+    public void buy(Player player, ItemStack item, int value) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    void remove(int quoteId) {
+    public void remove(Player player, int quoteId) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    Iterable<Quote> getQuotesFor(Player player) {
+    public Iterable<Quote> getQuotesFor(Player player) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }

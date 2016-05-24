@@ -23,6 +23,8 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Material;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,8 +37,74 @@ import org.bukkit.inventory.ItemStack;
  */
 public abstract class AbstractCommandExecutor extends PluginComponent implements CommandExecutor {
 
+    private static final int REAL_ARGS_BEGIN = 1;
+
     public AbstractCommandExecutor(ECPlugin plugin) {
         super(plugin);
+    }
+
+    public void logAndTellSender(CommandSender sender, Level level, Throwable cause, PluginComponent source) {
+        plugin.logException(cause, level, source);
+        sender.sendMessage(cause.getMessage());
+    }
+
+    public static String extractString(String[] args, int index, String errMsg) throws InvalidArgumentException {
+        index += REAL_ARGS_BEGIN;
+        try {
+            return args[index];
+        } catch (IndexOutOfBoundsException ex) {
+            if (errMsg != null) {
+                throw new InvalidArgumentException("Not enough argument! %s", ex, errMsg);
+            } else {
+                return "";
+            }
+        }
+    }
+
+    public static double extractDouble(String[] args, int index, String errMsg) throws InvalidArgumentException {
+        return extractDouble(args, index, errMsg, Double.MIN_VALUE, Double.MAX_VALUE);
+    }
+
+    public static double extractDouble(String[] args, int index, String errMsg, double lower, double upper) throws InvalidArgumentException {
+        index += REAL_ARGS_BEGIN;
+        try {
+            double d = Double.parseDouble(args[index]);
+            if (d < lower || d > upper) {
+                throw new InvalidArgumentException("Input value '%f' out of bounds.", d);
+            }
+            return d;
+        } catch (IndexOutOfBoundsException ex) {
+            if (errMsg != null) {
+                throw new InvalidArgumentException("Not enough argument! %s", ex, errMsg);
+            } else {
+                return 0;
+            }
+        } catch (NumberFormatException ex) {
+            throw new InvalidArgumentException("Invalid number input.", ex);
+        }
+    }
+
+    public static int extractInt(String[] args, int index, String errMsg) throws InvalidArgumentException {
+        return extractInt(args, index, errMsg, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    public static int extractInt(String[] args, int index, String errMsg, int lower, int upper) throws InvalidArgumentException {
+        index += REAL_ARGS_BEGIN;
+        try {
+            int i = Integer.parseInt(args[index]);
+            if (i < lower || i > upper) {
+                throw new InvalidArgumentException("Input value '%f' out of bounds.", i);
+            }
+            return i;
+        } catch (IndexOutOfBoundsException ex) {
+            if (errMsg != null) {
+                throw new InvalidArgumentException("Not enough argument! %s", ex, errMsg);
+            } else {
+                return 0;
+            }
+        } catch (NumberFormatException ex) {
+            throw new InvalidArgumentException("Invalid number input.", ex);
+        }
     }
 
     /**
@@ -97,15 +165,22 @@ public abstract class AbstractCommandExecutor extends PluginComponent implements
         }
     }
 
-    public static int parseMonetaryValue(String input, boolean signed) throws InvalidArgumentException {
+    public int extractMonetaryValue(String args[], int index, boolean signed, String errMsg) throws InvalidArgumentException {
+        index += REAL_ARGS_BEGIN;
         try {
-            double value = Double.parseDouble(input);
+            double value = Double.parseDouble(args[index]);
             if (!signed && value < 0) {
                 throw new InvalidArgumentException("Require a positive amount of money,");
             }
             return (int) (value * 100);
         } catch (NumberFormatException ex) {
-            throw new InvalidArgumentException("Invalid money input '%s'.", ex, input);
+            throw new InvalidArgumentException("Invalid money input '%s'.", ex, args[index]);
+        } catch (IndexOutOfBoundsException ex) {
+            if (errMsg != null) {
+                throw new InvalidArgumentException("Not enough argument! %s", errMsg);
+            } else {
+                return 0;
+            }
         }
     }
 }

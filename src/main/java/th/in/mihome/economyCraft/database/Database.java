@@ -102,12 +102,12 @@ public class Database extends PluginComponent implements AutoCloseable {
      */
     public TransactionResult process(Transaction transaction) {
         double doubleAmount = transaction.getAmount() / 100;
-        Economy econEngine = plugin.getEconomy().getEngine();
-        EconomyResponse eeResponse = econEngine.withdrawPlayer(transaction.getBuyer(), doubleAmount);
+        Economy moneyProvider = plugin.getMoneyProvider();
+        EconomyResponse eeResponse = moneyProvider.withdrawPlayer(transaction.getBuyer(), doubleAmount);
         int errorCode;
         String errorMessage = "";
         if (eeResponse.transactionSuccess()) {
-            eeResponse = econEngine.depositPlayer(transaction.getSeller(), doubleAmount);
+            eeResponse = moneyProvider.depositPlayer(transaction.getSeller(), doubleAmount);
             if (eeResponse.transactionSuccess()) {
                 //commit
                 try {
@@ -144,7 +144,7 @@ public class Database extends PluginComponent implements AutoCloseable {
                 //repay payee
                 errorCode = 5;
                 errorMessage += "Could not pay the receipient: " + eeResponse.errorMessage;
-                eeResponse = econEngine.depositPlayer(transaction.getBuyer(), doubleAmount);
+                eeResponse = moneyProvider.depositPlayer(transaction.getBuyer(), doubleAmount);
                 if (!eeResponse.transactionSuccess()) {
                     plugin.getLogger().log(Level.SEVERE, "Transaction failed and cannot repay buyer. Free money for die Fuhrer!");
                     errorCode = 6;

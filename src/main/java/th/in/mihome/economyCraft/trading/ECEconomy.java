@@ -38,15 +38,10 @@ public class ECEconomy extends PluginComponent {
 
     private Logistics centralLogistics;
 
-    private final Economy engine;
-
     private final Map<Set<Location>, Double> exportPenaltyCache = new HashMap<>();
 
-    private final Set<Market> markets = new HashSet<>();
-
-    public ECEconomy(ECPlugin plugin, Economy vaultEconomy) {
+    public ECEconomy(ECPlugin plugin) {
         super(plugin);
-        engine = vaultEconomy;
     }
 
     /**
@@ -57,18 +52,11 @@ public class ECEconomy extends PluginComponent {
     }
 
     public void match() {
-        List<Market> markets = new ArrayList<>(this.markets);
+        List<Market> markets = new ArrayList<>(plugin.getMarkets());
         Collections.shuffle(markets);
         markets.stream().forEach((m) -> {
             m.match();
         });
-    }
-
-    /**
-     * @return the engine
-     */
-    public Economy getEngine() {
-        return engine;
     }
 
     QuoteMatcher globalMatcher = newMatcher(null);
@@ -111,12 +99,5 @@ public class ECEconomy extends PluginComponent {
         }
 
         return exportPenalty;
-    }
-
-    /**
-     * @return the markets
-     */
-    public Set<Market> getMarkets() {
-        return markets;
     }
 }

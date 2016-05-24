@@ -21,36 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
+package th.in.mihome.economyCraft.banking.commands;
 
+import java.util.logging.Level;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import th.in.mihome.economyCraft.*;
+import th.in.mihome.economyCraft.banking.Bank;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public class MainCommandExecutor extends AbstractCommandExecutor {
+public abstract class BankingCommand extends PlayerCommand {
 
-    public MainCommandExecutor(ECPlugin plugin) {
+    public BankingCommand(ECPlugin plugin) {
         super(plugin);
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onPlayerCommand(Player sender, Command command, String label, String[] args) {
         try {
-            switch (Commands.getCommand(command)) {
-                case DEBUG1:
-                    Player player = requirePlayer(sender);
-                    player.sendMessage(player.getName());
-                    return true;
-                default:
-                    return false;
-            }
-        } catch (UnfulfilledRequirementException ex) {
-            sender.sendMessage(ex.getMessage());
+            Bank bank = Place.requireValidNearest(sender, plugin.getBanks());
+            return onBankingCommand(sender, bank, command, label, args);
+        } catch(UnfulfilledRequirementException ex){
+            logAndTellSender(sender, Level.INFO, ex, this);
+            return false;
         }
-        return true;
+    }
+    
+    public abstract boolean onBankingCommand(Player sender, Bank bank, Command command, String label, String[] args);
+    
+    protected ItemStack getItemInBank(ItemStack itemPassed, Bank bank, Player player) {
+        // TODO: implement mee senpaii~~!
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -21,40 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
+package th.in.mihome.economyCraft.trading.commands;
 
+import java.util.logging.Level;
 import org.bukkit.command.Command;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import th.in.mihome.economyCraft.ECPlugin;
+import th.in.mihome.economyCraft.InvalidArgumentException;
+import th.in.mihome.economyCraft.trading.Market;
+import th.in.mihome.economyCraft.trading.Quote;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public enum Commands {
-    DEPOSIT("deposit"),
-    BID("market_bid"),
-    OFFER("market_offer"),
-    REMOVE_QUOTE("remove_market_bit"),
-    LIST_QUOTES("list_market_quotes"),
-    WITHDRAW("withdraw"),
-    BUY("market_buy");
+public class BidCommand extends TradingCommand {
 
-    public static Commands getCommand(Command cmd) {
-        for (Commands cmds : values()) {
-            if (cmds.name.equalsIgnoreCase(cmd.getName())) {
-                return cmds;
-            }
+    public BidCommand(ECPlugin plugin) {
+        super(plugin);
+    }
+
+    @Override
+    public boolean onTradingCommand(Player sender, Market market, Command command, String label, String[] args) {
+        try {
+            ItemStack item = getItemStackFromStringArgs(
+                    extractString(args, 0, "Missing goods."),
+                    extractString(args, 1, "Missing amount."));
+            int value = extractMonetaryValue(args, 2, false, "Missing bid price.");
+            market.list(new Quote(sender, item, value, market, Quote.Side.BID));
+            sender.sendMessage("Bid listed.");
+            return true;
+        } catch (InvalidArgumentException ex) {
+            logAndTellSender(sender, Level.INFO, ex, market);
+            return false;
         }
-        return null;
-    }
-
-    private final String name;
-
-    private Commands(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
 }
