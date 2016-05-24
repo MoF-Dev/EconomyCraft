@@ -31,6 +31,7 @@ import org.bukkit.command.Command;
  */
 public enum Commands {
     DEPOSIT("deposit"),
+<<<<<<< Updated upstream
     DEBUG1("debug1"),
     BID("market_bid"),
     OFFER("market_offer"),
@@ -38,6 +39,11 @@ public enum Commands {
     REMOVE_OFFER("remove_market_offer"),
     LIST_QUOTES("list_market_quotes");
 
+=======
+    WITHDRAW("withdraw"),
+    DEBUG1("debug1");
+    
+>>>>>>> Stashed changes
     public static Commands getCommand(Command cmd) {
         for (Commands cmds : values()) {
             if (cmds.name.equalsIgnoreCase(cmd.getName())) {
