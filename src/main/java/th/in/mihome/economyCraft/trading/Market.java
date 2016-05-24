@@ -154,7 +154,7 @@ public class Market extends Place {
                 Transaction t = new Transaction(TransactionType.PURCHASE, bestBid.getTrader(), bestOffer.getTrader(), realAmount);
                 TransactionResult tr = plugin.getDb().process(t);
                 if(tr.isSuccess()){
-                    plugin.getEconomy().centralLogistics.deliver(bestOffer.getMarket().getLocation(), bestBid.getMarket().getLocation(), bestBid.getTrader(), realTp);
+                    plugin.getEconomy().getCentralLogistics().deliver(bestOffer.getMarket().getLocation(), bestBid.getMarket().getLocation(), bestBid.getTrader(), realTp);
                     
                 }
                 

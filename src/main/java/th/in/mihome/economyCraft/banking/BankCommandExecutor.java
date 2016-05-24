@@ -105,7 +105,6 @@ public class BankCommandExecutor extends AbstractCommandExecutor {
 
         ItemStack itemPassed = new ItemStack(Material.getMaterial(args[0]), amount);
         PlayerInventory inventory = player.getInventory();
-<<<<<<< Updated upstream
         ItemStack returnedItem = getItemInBank(itemPassed, bank, player);
         if (returnedItem.getAmount() > 0) {
             // withdraw then add then return
@@ -119,25 +118,25 @@ public class BankCommandExecutor extends AbstractCommandExecutor {
                 }
             } else {
                 // cannot withdraw
-=======
-        ItemStack returnedItem = itemInBank(itemPassed);
-        if (returnedItem.getAmount() > itemPassed.getAmount()){
-            int amountWithdrawn = Math.min(returnedItem.getAmount(), itemPassed.getAmount());
-            ItemStack leftover = new ItemStack(Material.getMaterial(args[0]), returnedItem.getAmount() - itemPassed.getAmount());
-            ItemStack itemAdded = new ItemStack(Material.getMaterial(args[0]), amountWithdrawn);
-            inventory.addItem(itemAdded);
-            
-            if(!publishWithdraw(player, itemAdded, amountWithdrawn, bank)){
-                itemPassed.setAmount(amountWithdrawn);
-                inventory.remove(itemPassed);
-            }
-        }
-        else{
-            inventory.addItem(itemPassed);
-            if (!publishWithdraw(player, itemPassed, amount, bank)){
-                itemPassed.setAmount(amount);
-                inventory.remove(itemPassed);
->>>>>>> Stashed changes
+                
+//                #### IDK WHAT THIS IS ITS LEFTOVER FROM FIXING SYNC ERROR PLEASE LOOK
+//        ItemStack returnedItem = itemInBank(itemPassed);
+//        if (returnedItem.getAmount() > itemPassed.getAmount()){
+//            int amountWithdrawn = Math.min(returnedItem.getAmount(), itemPassed.getAmount());
+//            ItemStack leftover = new ItemStack(Material.getMaterial(args[0]), returnedItem.getAmount() - itemPassed.getAmount());
+//            ItemStack itemAdded = new ItemStack(Material.getMaterial(args[0]), amountWithdrawn);
+//            inventory.addItem(itemAdded);
+//            
+//            if(!publishWithdraw(player, itemAdded, amountWithdrawn, bank)){
+//                itemPassed.setAmount(amountWithdrawn);
+//                inventory.remove(itemPassed);
+//            }
+//        }
+//        else{
+//            inventory.addItem(itemPassed);
+//            if (!publishWithdraw(player, itemPassed, amount, bank)){
+//                itemPassed.setAmount(amount);
+//                inventory.remove(itemPassed);
             }
         }
     }

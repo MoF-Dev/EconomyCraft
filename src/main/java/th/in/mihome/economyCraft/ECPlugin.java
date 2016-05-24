@@ -46,16 +46,14 @@ import th.in.mihome.economyCraft.trading.TradingCommandExecutor;
  * @author Kolatat Thangkasemvathana
  */
 public class ECPlugin extends JavaPlugin {
+
     public Configuration config;
 
     private BankCommandExecutor bankCmdExecutor;
     private ArrayList<Bank> banks;
     private Chat chat;
     private Database database;
-    
-    public Database getDb(){
-        return database;
-    }
+
 
     private ECEconomy economy;
     private MainCommandExecutor mainCmdExecutor;
@@ -71,15 +69,22 @@ public class ECPlugin extends JavaPlugin {
     public ArrayList<Bank> getBanks() {
         return banks;
     }
+    public Database getDb() {
+        return database;
+    }
+
     /**
      * @return the economy
      */
     public ECEconomy getEconomy() {
         return economy;
     }
+
+
     public void logException(Throwable ex, Level level, PluginComponent source) {
         getLogger().log(level, String.format("From [%s]:", source.getClass().getName()), ex);
     }
+
     @Override
     public void onDisable() {
     }
@@ -98,6 +103,7 @@ public class ECPlugin extends JavaPlugin {
         registerCommandExecutor(tradeCmdExecutor, Commands.BID, Commands.OFFER,
                 Commands.REMOVE_BID, Commands.REMOVE_OFFER, Commands.LIST_QUOTES);
     }
+
     private ArrayList<Bank> loadBanks() {
         ArrayList<Bank> raw = new ArrayList<>();
         try {
@@ -108,12 +114,14 @@ public class ECPlugin extends JavaPlugin {
         } catch (SQLException ex) {
             Logger.getLogger(ECPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return raw;
     }
+
     private void loadConfiguration() {
         config = new Configuration(this, getConfig());
     }
+
     private void loadDependencies() {
         if (!setupEconomy()) {
             getLogger().severe("Disabled due to no Vault dependency found!");
@@ -126,6 +134,12 @@ public class ECPlugin extends JavaPlugin {
             getLogger().severe("Disabled due to database connection failure!");
             getServer().getPluginManager().disablePlugin(this);
             return;
+        } else {
+            try {
+                database.getConnection().createStatement().executeUpdate(config.CREATE_TABLE_SQL);
+            } catch (SQLException ex) {
+                logException(ex, Level.SEVERE);
+            }
         }
     }
 
@@ -147,10 +161,15 @@ public class ECPlugin extends JavaPlugin {
 
         return raw;
     }
+
     private void loadPlaces() {
         markets = loadMarkets();
         banks = loadBanks();
     }
+    private void logException(Throwable ex, Level level) {
+        getLogger().log(level, null, ex);
+    }
+
     private void registerCommandExecutor(CommandExecutor executor, Commands... commands) {
         for (Commands command : commands) {
             getCommand(command.getName()).setExecutor(executor);

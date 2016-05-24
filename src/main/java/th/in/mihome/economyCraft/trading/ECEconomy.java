@@ -36,7 +36,7 @@ import th.in.mihome.economyCraft.PluginComponent;
  */
 public class ECEconomy extends PluginComponent {
     
-    Logistics centralLogistics;
+    private Logistics centralLogistics;
 
     private final Economy engine;
 
@@ -47,6 +47,13 @@ public class ECEconomy extends PluginComponent {
     public ECEconomy(ECPlugin plugin, Economy vaultEconomy) {
         super(plugin);
         engine = vaultEconomy;
+    }
+
+    /**
+     * @return the centralLogistics
+     */
+    public Logistics getCentralLogistics() {
+        return centralLogistics;
     }
     
     public void match(){
