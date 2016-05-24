@@ -40,6 +40,7 @@ import th.in.mihome.economyCraft.options.MatchingAlgorithm;
  * @author Kolatat Thangkasemvathana
  */
 public class Configuration extends PluginComponent {
+
     private static String getResourceAsString(String resourceName) {
         return new Scanner(Configuration.class.getResourceAsStream(resourceName), "UTF-8").useDelimiter("\\A").next();
     }
@@ -71,7 +72,6 @@ public class Configuration extends PluginComponent {
     public final int TRADING_QUEUE_INITIAL_SIZE;
 
     private final HashMap<Material, ECItem> itemDatabase;
-
 
     public Configuration(ECPlugin plugin, FileConfiguration config) {
         super(plugin);
@@ -115,6 +115,7 @@ public class Configuration extends PluginComponent {
 
         CREATE_TABLE_SQL = preprocess(getResourceAsString("createTables.sql"));
     }
+
     public ECItem getItemInfo(Material material) {
         return itemDatabase.get(material);
     }
@@ -129,6 +130,7 @@ public class Configuration extends PluginComponent {
         }
         return input;
     }
+
     private void readItemDb() {
         try {
             CSVReader reader = new CSVReader(new FileReader("blockdb.csv"));

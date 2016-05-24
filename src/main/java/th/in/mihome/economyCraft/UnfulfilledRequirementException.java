@@ -23,39 +23,28 @@
  */
 package th.in.mihome.economyCraft;
 
-import org.bukkit.command.Command;
-
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public enum Commands {
-    DEPOSIT("deposit"),
-    DEBUG1("debug1"),
-    BID("market_bid"),
-    OFFER("market_offer"),
-    REMOVE_QUOTE("remove_market_bit"),
-    LIST_QUOTES("list_market_quotes"),
-    WITHDRAW("withdraw"),
-    BUY("market_buy");
+public class UnfulfilledRequirementException extends Exception {
 
-    public static Commands getCommand(Command cmd) {
-        for (Commands cmds : values()) {
-            if (cmds.name.equalsIgnoreCase(cmd.getName())) {
-                return cmds;
-            }
-        }
-        return null;
+    public UnfulfilledRequirementException() {
     }
 
-    private final String name;
-
-    private Commands(String name) {
-        this.name = name;
+    public UnfulfilledRequirementException(String message) {
+        super(message);
     }
 
-    public String getName() {
-        return name;
+    public UnfulfilledRequirementException(String message, Throwable cause) {
+        super(message, cause);
     }
 
+    public UnfulfilledRequirementException(String format, Object... args) {
+        super(String.format(format, args));
+    }
+
+    public UnfulfilledRequirementException(String format, Throwable cause, Object... args) {
+        super(String.format(format, args), cause);
+    }
 }

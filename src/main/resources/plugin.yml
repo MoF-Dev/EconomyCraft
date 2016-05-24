@@ -9,20 +9,20 @@ commands:
     debug1:
     market_bid:
         description: Creates a bidding for an item in the nearest market.
-        aliases: [newbid, bid, buy]
-        usage: "Usage: /<command> [item_id] [quantity] [bid_price] [item_data]"
+        aliases: [newbid, bid]
+        usage: "Usage: /<command> <item_id>[,<item_damage>] <quantity> <bid_price>"
+    market_buy:
+        description: Creates a bidding for an item in the nearest market with the market price.
+        aliases: [buy]
+        usage: "Usage: /<command> <item_id>[,<item_damage>] <quantity> <bid_price>"
     market_offer:
-        description: Creates an offer for the currently held item in the nearest market.
+        description: Creates an offer for the currently held item in the nearest market. If the amount is not set, defaults to all selected.
         aliases: [newoffer, offer, ask, sell]
-        usage: "Usage: /<command> [offer_price]"
-    remove_market_bid:
-        description: Withdraws a bid sent in the nearest market.
-        aliases: [debid, removebid]
+        usage: "Usage: /<command> [offer_price] [offer_amount]"
+    remove_quote:
+        description: Remove a quote previously listed at the nearest market.
+        aliases: [debid, removebid, deoffer, removeoffer, delquote, dq]
         usage: "Usage: /<command> [bid_id]"
-    remove_market_offer:
-        description: Withdraws an offer sent in the nearest market.
-        aliases: [deoffer, removeoffer]
-        usage: "Usage: /<command> [offer_id]"
     list_market_quotes:
         description: Lists all your quotes at the nearest market.
         aliases: [lsquote]

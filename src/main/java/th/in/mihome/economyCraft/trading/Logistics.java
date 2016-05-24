@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
  * @author Kolatat Thangkasemvathana
  */
 public class Logistics {
-    public void deliver(Location l1, Location l2, Player p, int pay){
+
+    public void deliver(Location l1, Location l2, Player p, int pay) {
     }
 }

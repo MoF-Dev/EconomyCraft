@@ -54,7 +54,6 @@ public class ECPlugin extends JavaPlugin {
     private Chat chat;
     private Database database;
 
-
     private ECEconomy economy;
     private MainCommandExecutor mainCmdExecutor;
     private Permission permission;
@@ -69,6 +68,7 @@ public class ECPlugin extends JavaPlugin {
     public ArrayList<Bank> getBanks() {
         return banks;
     }
+
     public Database getDb() {
         return database;
     }
@@ -79,7 +79,6 @@ public class ECPlugin extends JavaPlugin {
     public ECEconomy getEconomy() {
         return economy;
     }
-
 
     public void logException(Throwable ex, Level level, PluginComponent source) {
         getLogger().log(level, String.format("From [%s]:", source.getClass().getName()), ex);
@@ -101,7 +100,7 @@ public class ECPlugin extends JavaPlugin {
         registerCommandExecutor(mainCmdExecutor, Commands.DEBUG1);
         registerCommandExecutor(bankCmdExecutor, Commands.DEPOSIT);
         registerCommandExecutor(tradeCmdExecutor, Commands.BID, Commands.OFFER,
-                Commands.REMOVE_BID, Commands.REMOVE_OFFER, Commands.LIST_QUOTES);
+                Commands.REMOVE_QUOTE, Commands.LIST_QUOTES);
     }
 
     private ArrayList<Bank> loadBanks() {
@@ -166,6 +165,7 @@ public class ECPlugin extends JavaPlugin {
         markets = loadMarkets();
         banks = loadBanks();
     }
+
     private void logException(Throwable ex, Level level) {
         getLogger().log(level, null, ex);
     }

@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.Place;
@@ -103,11 +104,11 @@ public class Market extends Place {
                 break;
         }
     }
-    
-    public void unlist(Quote q){
+
+    public void unlist(Quote q) {
         QuoteMatcher matcher = matchers.get(q.getItem());
-        if(matcher!=null){
-            switch(q.getSide()){
+        if (matcher != null) {
+            switch (q.getSide()) {
                 case BID:
                     matcher.getBids().remove(q);
                     break;
@@ -120,7 +121,9 @@ public class Market extends Place {
 
     public void match() {
         for (Entry<ItemStack, QuoteMatcher> itemEntry : matchers.entrySet()) {
-            if(itemEntry.getValue().getBids().isEmpty() || itemEntry.getValue().getOffers().isEmpty()) continue;
+            if (itemEntry.getValue().getBids().isEmpty() || itemEntry.getValue().getOffers().isEmpty()) {
+                continue;
+            }
             Quote tmpQuote;
             ArrayList<Quote> bids = new ArrayList<>();
             ArrayList<Quote> offers = new ArrayList<>();
@@ -136,30 +139,45 @@ public class Market extends Place {
             }
             Quote bestBid = Collections.max(bids, (q1, q2) -> itemEntry.getValue().compare(q1, q2, this));
             Quote bestOffer = Collections.max(offers, (q1, q2) -> itemEntry.getValue().compare(q1, q2, this));
-            assert(bestBid.getItem().isSimilar(bestOffer.getItem()));
+            assert (bestBid.getItem().isSimilar(bestOffer.getItem()));
             bestBid.getMarket().unlist(bestBid);
             bestOffer.getMarket().unlist(bestOffer);
-            
+
             int bid = bestBid.getValue();
             int xBid = bestBid.getValue(this);
             int offer = bestOffer.getValue();
             int xOffer = bestOffer.getValue(this);
-            int tp = Math.abs(offer-xOffer);
-            
-            if(offer+tp >= bid){
+            int tp = Math.abs(offer - xOffer);
+
+            if (offer + tp >= bid) {
                 // theres a match
                 int quant = Math.min(bestBid.getQuantity(), bestOffer.getQuantity());
-                int realAmount = offer*quant;
-                int realTp = tp*quant;
+                int realAmount = offer * quant;
+                int realTp = tp * quant;
                 Transaction t = new Transaction(TransactionType.PURCHASE, bestBid.getTrader(), bestOffer.getTrader(), realAmount);
                 TransactionResult tr = plugin.getDb().process(t);
-                if(tr.isSuccess()){
+                if (tr.isSuccess()) {
                     plugin.getEconomy().getCentralLogistics().deliver(bestOffer.getMarket().getLocation(), bestBid.getMarket().getLocation(), bestBid.getTrader(), realTp);
-                    
+
                 }
-                
+
             }
         }
+    }
+
+    void buy(Player player, ItemStack item, int value) {
+        // TODO: implement mee senpaii~~!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    void remove(int quoteId) {
+        // TODO: implement mee senpaii~~!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    Iterable<Quote> getQuotesFor(Player player) {
+        // TODO: implement mee senpaii~~!
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

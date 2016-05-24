@@ -85,18 +85,18 @@ public class Database extends PluginComponent implements AutoCloseable {
 
     /**
      * Process the transaction command.
-     * 
+     *
      * A transaction involves the transfer of money from one account to another.
      * This method TRIES to ensure that money deducted from the buyer is
      * transferred to the seller successfully. If not, it will attempt to repay
      * the buyer, but may fail. However, the result of the transaction will be
-     * marked as successful if and only if the transfer is committed successfully
-     * to both the buyer and the seller.
-     * 
+     * marked as successful if and only if the transfer is committed
+     * successfully to both the buyer and the seller.
+     *
      * If this transaction involves an exchange of goods or services, the
      * exchange should only be performed if the result of this transaction is
      * indicated as successful.
-     * 
+     *
      * @param transaction The transaction to process.
      * @return The result of the transaction.
      */

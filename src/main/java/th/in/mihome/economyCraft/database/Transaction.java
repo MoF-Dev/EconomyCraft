@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
  * @author Kolatat Thangkasemvathana
  */
 public class Transaction {
+
     private final TransactionType type;
     private final Player buyer;
     private final Player seller;
@@ -37,9 +38,9 @@ public class Transaction {
     private final long time;
 
     public Transaction(TransactionType type, Player buyer, Player seller, int amount, long time) {
-        this.type=type;
-        if(amount<0){
-            amount =-amount;
+        this.type = type;
+        if (amount < 0) {
+            amount = -amount;
             this.buyer = seller;
             this.seller = buyer;
         } else {
@@ -50,8 +51,8 @@ public class Transaction {
         this.time = time;
     }
 
-    public Transaction(TransactionType type,Player buyer, Player seller, int amount){
-        this(type,buyer,seller,amount,System.currentTimeMillis());
+    public Transaction(TransactionType type, Player buyer, Player seller, int amount) {
+        this(type, buyer, seller, amount, System.currentTimeMillis());
     }
 
     /**
@@ -88,9 +89,9 @@ public class Transaction {
     public TransactionType getType() {
         return type;
     }
-    
-    public String getReference(){
+
+    public String getReference() {
         return String.format("TRF%03d%024d", getType().ordinal(), hashCode());
     }
-    
+
 }

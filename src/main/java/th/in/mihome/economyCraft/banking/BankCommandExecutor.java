@@ -40,16 +40,21 @@ public class BankCommandExecutor extends AbstractCommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        switch (Commands.getCommand(cmd)) {
-            case DEPOSIT:
-                Player player = requirePlayer(sender);
-                if (player != null) {
-                    deposit(player, args);
-                }
-                return true;
-            default:
-                return false;
+        try {
+            switch (Commands.getCommand(cmd)) {
+                case DEPOSIT:
+                    Player player = requirePlayer(sender);
+                    if (player != null) {
+                        deposit(player, args);
+                    }
+                    return true;
+                default:
+                    return false;
+            }
+        } catch (UnfulfilledRequirementException ex) {
+            sender.sendMessage(ex.getMessage());
         }
+        return false;
     }
 
     private void deposit(Player player, String[] args) {
@@ -118,7 +123,7 @@ public class BankCommandExecutor extends AbstractCommandExecutor {
                 }
             } else {
                 // cannot withdraw
-                
+
 //                #### IDK WHAT THIS IS ITS LEFTOVER FROM FIXING SYNC ERROR PLEASE LOOK
 //        ItemStack returnedItem = itemInBank(itemPassed);
 //        if (returnedItem.getAmount() > itemPassed.getAmount()){

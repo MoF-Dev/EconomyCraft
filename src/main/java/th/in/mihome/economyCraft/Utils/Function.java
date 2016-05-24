@@ -25,19 +25,19 @@ package th.in.mihome.economyCraft.Utils;
 
 /**
  * Interface for a function.
- * 
+ *
  * y = f(x1, x2, x3, ..., xn)
- * 
+ *
  * @author Kolatat Thangkasemvathana
  * @param <T> The return type of the function.
  */
 public interface Function<T> {
 
-     /**
+    /**
      * The function for the calculation of values.
-     * 
+     *
      * @param args The arguments for this function.
      * @return The output of this function.
      */
-    public T calculate(Object ...args);
+    public T calculate(Object... args);
 }

@@ -35,7 +35,7 @@ import th.in.mihome.economyCraft.PluginComponent;
  * @author Kolatat Thangkasemvathana
  */
 public class ECEconomy extends PluginComponent {
-    
+
     private Logistics centralLogistics;
 
     private final Economy engine;
@@ -55,8 +55,8 @@ public class ECEconomy extends PluginComponent {
     public Logistics getCentralLogistics() {
         return centralLogistics;
     }
-    
-    public void match(){
+
+    public void match() {
         List<Market> markets = new ArrayList<>(this.markets);
         Collections.shuffle(markets);
         markets.stream().forEach((m) -> {

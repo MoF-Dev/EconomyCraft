@@ -32,6 +32,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Quote {
 
+    private int id;
     private final Player trader;
     private final ItemStack item;
     private final int value;
@@ -46,6 +47,20 @@ public class Quote {
         this.time = System.currentTimeMillis();
         this.market = market;
         this.side = side;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**

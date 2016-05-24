@@ -39,7 +39,7 @@ public class Cacheable<T> implements Function<T> {
     private final HashMap<Object[], MortalValue<T>> valueCacheMap = new HashMap<>();
 
     private final Function<T> function;
-    
+
     private int TTL;
 
     @Override
@@ -53,6 +53,7 @@ public class Cacheable<T> implements Function<T> {
 
     /**
      * Creates a new cacheable with the specified function.
+     *
      * @param function The function used for the calculation of values.
      * @param TTL The TTL of the value cache.
      */
@@ -60,21 +61,23 @@ public class Cacheable<T> implements Function<T> {
         this.function = function;
         this.TTL = TTL;
     }
-    
+
     /**
      * Get the TTL.
+     *
      * @return The TTL, in milliseconds.
      */
-    public int getTTL(){
+    public int getTTL() {
         return TTL;
     }
-    
+
     /**
      * Set the TTL.
+     *
      * @param TTL Set the TTL, in milliseconds.
      */
-    public void setTTL(int TTL){
-        this.TTL=TTL;
+    public void setTTL(int TTL) {
+        this.TTL = TTL;
     }
 
     /**
@@ -85,7 +88,7 @@ public class Cacheable<T> implements Function<T> {
      * @return The result of the function.
      */
     public T forceGet(Object... args) {
-        MortalValue<T> value = new MortalValue<>(calculate(args),TTL);
+        MortalValue<T> value = new MortalValue<>(calculate(args), TTL);
         valueCacheMap.put(args, value);
         return value.getValue();
     }
@@ -120,14 +123,14 @@ public class Cacheable<T> implements Function<T> {
         MortalValue<T> v = new MortalValue<>(value, TTL);
         valueCacheMap.put(args, v);
     }
-    
+
     /**
      * Manually override the cache of a calculation.
      *
      * @param value The value to override.
      * @param args The arguments for the function.
      */
-    public void set(T value, Object... args){
+    public void set(T value, Object... args) {
         setWithTTL(value, TTL, args);
     }
 

@@ -28,6 +28,7 @@ package th.in.mihome.economyCraft.database;
  * @author Kolatat Thangkasemvathana
  */
 public class TransactionResult {
+
     private final boolean success;
     private final int errorCode;
     private final String errorMessage;
@@ -37,7 +38,8 @@ public class TransactionResult {
         errorCode = 1;
         errorMessage = "Success";
     }
-    TransactionResult(int code, String message){
+
+    TransactionResult(int code, String message) {
         success = false;
         errorCode = code;
         errorMessage = message;

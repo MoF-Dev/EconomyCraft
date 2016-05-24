@@ -39,15 +39,18 @@ public class MainCommandExecutor extends AbstractCommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        switch (Commands.getCommand(command)) {
-            case DEBUG1:
-                Player player = requirePlayer(sender);
-                if (player != null) {
-
-                }
-                return true;
-            default:
-                return false;
+        try {
+            switch (Commands.getCommand(command)) {
+                case DEBUG1:
+                    Player player = requirePlayer(sender);
+                    player.sendMessage(player.getName());
+                    return true;
+                default:
+                    return false;
+            }
+        } catch (UnfulfilledRequirementException ex) {
+            sender.sendMessage(ex.getMessage());
         }
+        return true;
     }
 }

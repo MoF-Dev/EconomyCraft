@@ -23,8 +23,6 @@
  */
 package th.in.mihome.economyCraft.trading;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -43,47 +41,70 @@ public class TradingCommandExecutor extends AbstractCommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        switch (Commands.getCommand(command)) {
-            case BID:
-                Player player = requirePlayer(sender);
-                if (player != null) {
-                    Location pl = player.getLocation();
-                    Market cm = Place.getNearest(pl, plugin.getEconomy().getMarkets());
-                    if (cm.isNear(pl)) {
-                        short damage = 0;
-                        String itemSpecs[] = args[0].split(",");
-                        if (itemSpecs.length > 1) {
-                            damage = Short.parseShort(itemSpecs[1]);
-                        }
-                        Material m;
-                        try {
-                            m = Material.getMaterial(Integer.parseInt(itemSpecs[0]));
-                        } catch (NumberFormatException ex) {
-                            m = Material.getMaterial(itemSpecs[0]);
-                        }
-                        ItemStack item = new ItemStack(m, Integer.parseInt(args[1]), damage);
-                        int value = (int) (Double.parseDouble(args[2]) * 100);
-                        Quote q = new Quote(player, item, value, cm, Quote.Side.BID);
-                        cm.list(q);
-                    } else {
-                        player.sendMessage(new String[]{
-                            "You must be in a market to use this command!",
-                            String.format("The nearest market is %s, %s, which is %dm from here!",
-                            cm.getName(), cm.getAddress(),
-                            (int) pl.distance(cm.getLocation()))
-                        });
-
+        try {
+            Player player;
+            Market market;
+            ItemStack item;
+            int value;
+            int quote_id;
+            switch (Commands.getCommand(command)) {
+                case BID:
+                    player = requirePlayer(sender);
+                    market = Place.requireValidNearest(player, plugin.getEconomy().getMarkets());
+                    item = getItemStackFromStringArgs(args[1], args[2]);
+                    value = parseMonetaryValue(args[3], false);
+                    market.list(new Quote(player, item, value, market, Quote.Side.BID));
+                    player.sendMessage("Bid listed.");
+                    return true;
+                case OFFER:
+                    player = requirePlayer(sender);
+                    market = Place.requireValidNearest(player, plugin.getEconomy().getMarkets());
+                    item = player.getInventory().getItemInMainHand();
+                    int amount = Integer.MAX_VALUE;
+                    if (args.length > 2) {
+                        amount = Integer.parseInt(args[2]);
                     }
-                }
-                break;
-            case OFFER:
-            case REMOVE_BID:
-            case REMOVE_OFFER:
-            case LIST_QUOTES:
-            default:
-                return false;
+                    if (amount <= 0 || item == null) {
+                        throw new InvalidArgumentException("You must offer some item!");
+                    }
+                    item.setAmount(Math.min(item.getAmount(), amount));
+                    value = parseMonetaryValue(args[1], false);
+                    // TODO warn player if this is a dum move?
+                    ensureGoods(player, item);
+                    market.list(new Quote(player, item, value, market, Quote.Side.OFFER));
+                    return true;
+                case BUY:
+                    player = requirePlayer(sender);
+                    market = Place.requireValidNearest(player, plugin.getEconomy().getMarkets());
+                    item = getItemStackFromStringArgs(args[1], args[2]);
+                    value = parseMonetaryValue(args[3], false);
+                    market.buy(player, item, value);
+                    return true;
+                case REMOVE_QUOTE:
+                    player = requirePlayer(sender);
+                    market = Place.requireValidNearest(player, plugin.getEconomy().getMarkets());
+                    quote_id = Integer.parseInt(args[1]);
+                    market.remove(quote_id);
+                    return true;
+                case LIST_QUOTES:
+                    player = requirePlayer(sender);
+                    market = Place.requireValidNearest(player, plugin.getEconomy().getMarkets());
+                    for (Quote quote : market.getQuotesFor(player)) {
+                        player.sendMessage(String.format("#%d - %s (%d:%d) %s %d at %s\n.",
+                                quote.getId(),
+                                quote.getItem().getType(),
+                                quote.getItem().getTypeId(),
+                                quote.getItem().getDurability(),
+                                quote.getSide(),
+                                quote.getQuantity(),
+                                plugin.getEconomy().getEngine().format(quote.getValue() / 100.0)));
+                    }
+            }
+        } catch (UnfulfilledRequirementException ex) {
+            sender.sendMessage(ex.getMessage());
+            return true;
         }
-        return true;
+        return false;
     }
 
 }

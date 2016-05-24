@@ -23,39 +23,13 @@
  */
 package th.in.mihome.economyCraft;
 
-import org.bukkit.command.Command;
-
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public enum Commands {
-    DEPOSIT("deposit"),
-    DEBUG1("debug1"),
-    BID("market_bid"),
-    OFFER("market_offer"),
-    REMOVE_QUOTE("remove_market_bit"),
-    LIST_QUOTES("list_market_quotes"),
-    WITHDRAW("withdraw"),
-    BUY("market_buy");
+public class NonPlayerException extends UnfulfilledRequirementException {
 
-    public static Commands getCommand(Command cmd) {
-        for (Commands cmds : values()) {
-            if (cmds.name.equalsIgnoreCase(cmd.getName())) {
-                return cmds;
-            }
-        }
-        return null;
+    public NonPlayerException() {
+        super("A non-player was provided when the environment required a player.");
     }
-
-    private final String name;
-
-    private Commands(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
 }
