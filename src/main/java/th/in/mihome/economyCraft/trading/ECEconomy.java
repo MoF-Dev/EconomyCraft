@@ -83,12 +83,17 @@ public class ECEconomy extends PluginComponent {
     }
 
     public double getExportPenalty(Location a, Location b) {
-        // TODO lon change this to weighted shortest path
-        /* EXAMPLE */
-
+        /*
+            TODO 
+            from point a to b, generate fixed coords in grid
+            check straight distance between subcoords, count amount of road blocks on line and add to counter
+            decrease weight based on amount
+            loop through for entire grid
+            use dijkstra algorithm to find shortest path.
+        */
+        
         ECItem i1 = plugin.config.getItemInfo(a.getBlock().getType());
         int weight = i1.getPathWeight();
-        // if blahblahblah is min then this is the path to go...
 
         Set<Location> key = new HashSet<>();
         key.add(a);
