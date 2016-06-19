@@ -38,26 +38,53 @@ public class Database extends PluginComponent implements AutoCloseable {
 
     private boolean connected = false;
     private final Connection connection;
-    private String transactionSql;
+    private String createBankAccountSql;
+    private String getBankAccountSql;
     private Statement selectStmt;
+    private String transactionSql;
+    private String updateBankAccountSql;
 
     public Database(ECPlugin plugin) {
         super(plugin);
         compileSql();
         connection = newConnection();
     }
-
-    private void compileSql() {
-        transactionSql = String.format("insert into `%s` (`account`,`amount`,`type`,`time`,`reference`) values (?,?,?,?,?)",
-                plugin.config.TABLE_TRANSACTIONS);
-    }
-
     @Override
     public void close() throws Exception {
         if (isConnected()) {
             connection.close();
         }
     }
+    public void createBankAccount(String accountName) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(createBankAccountSql);
+            ps.setString(1, accountName);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            plugin.logException(ex, Level.SEVERE, this);
+        }
+    }
+
+    public int getBankAccount(String accountName) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(getBankAccountSql);
+            ps.setString(1, accountName);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                createBankAccount(accountName);
+                return 0;
+            }
+        } catch (SQLException ex) {
+            plugin.logException(ex, Level.SEVERE, this);
+        }
+        return -1;
+    }
+    public Connection getConnection() {
+        return connection;
+    }
+
 
     /**
      * @return the connected
@@ -74,15 +101,6 @@ public class Database extends PluginComponent implements AutoCloseable {
             return false;
         }
     }
-
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public SelectStatement select() {
-        return new SelectStatement(selectStmt);
-    }
-
     /**
      * Process the transaction command.
      *
@@ -102,7 +120,7 @@ public class Database extends PluginComponent implements AutoCloseable {
      */
     public TransactionResult process(Transaction transaction) {
         double doubleAmount = transaction.getAmount() / 100;
-        Economy moneyProvider = plugin.getMoneyProvider();
+        Economy moneyProvider = plugin.getWalletProvider();
         EconomyResponse eeResponse = moneyProvider.withdrawPlayer(transaction.getBuyer(), doubleAmount);
         int errorCode;
         String errorMessage = "";
@@ -157,6 +175,27 @@ public class Database extends PluginComponent implements AutoCloseable {
             errorMessage += "Could not get buyer's money: " + eeResponse.errorMessage;
         }
         return new TransactionResult(errorCode, errorMessage);
+    }
+
+    public SelectStatement select() {
+        return new SelectStatement(selectStmt);
+    }
+    public void updateBankAccount(String playerId, int amount) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(updateBankAccountSql);
+            ps.setInt(1, amount);
+            ps.setString(2, playerId);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            plugin.logException(ex, Level.SEVERE, this);
+        }
+    }
+    private void compileSql() {
+        transactionSql = String.format("insert into `%s` (`account`,`amount`,`type`,`time`,`reference`) values (?,?,?,?,?)",
+                plugin.config.TABLE_TRANSACTIONS);
+        getBankAccountSql = String.format("select `balance` from `%s` where `account`=?", plugin.config.TABLE_ACCOUNTS);
+        createBankAccountSql = String.format("insert into `%s` (`account`) values (?)", plugin.config.TABLE_ACCOUNTS);
+        updateBankAccountSql = String.format("update `%s` set `balance`=`balance`+? where `account`=?", plugin.config.TABLE_ACCOUNTS);
     }
 
     private Connection newConnection() {

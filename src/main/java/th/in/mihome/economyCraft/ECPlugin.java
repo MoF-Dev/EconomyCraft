@@ -23,11 +23,6 @@
  */
 package th.in.mihome.economyCraft;
 
-import th.in.mihome.economyCraft.trading.commands.OfferCommand;
-import th.in.mihome.economyCraft.trading.commands.BuyCommand;
-import th.in.mihome.economyCraft.trading.commands.RemoveQuoteCommand;
-import th.in.mihome.economyCraft.trading.commands.ListQuotesCommand;
-import th.in.mihome.economyCraft.trading.commands.BidCommand;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,36 +32,49 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import th.in.mihome.economyCraft.banking.Bank;
 import th.in.mihome.economyCraft.banking.commands.DepositCommand;
 import th.in.mihome.economyCraft.banking.commands.WithdrawCommand;
 import th.in.mihome.economyCraft.database.Database;
-import th.in.mihome.economyCraft.trading.*;
+import th.in.mihome.economyCraft.trading.ECEconomy;
+import th.in.mihome.economyCraft.trading.Market;
+import th.in.mihome.economyCraft.trading.commands.*;
 
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
-public class ECPlugin extends JavaPlugin {
+public class ECPlugin extends JavaPlugin implements Listener {
 
     public Configuration config;
 
     private ArrayList<Bank> banks;
+    private CentralBank centralBank;
     private Chat chat;
     private Database database;
-    private Economy moneyProvider;
     private ECEconomy economy;
-    private Permission permission;
-
     private ArrayList<Market> markets;
+    private Permission permission;
+    private Economy walletProvider;
 
     /**
      * @return the banks
      */
     public ArrayList<Bank> getBanks() {
         return banks;
+    }
+
+    /**
+     * @return the centralBank
+     */
+    public CentralBank getCentralBank() {
+        return centralBank;
     }
 
     public Database getDb() {
@@ -88,10 +96,10 @@ public class ECPlugin extends JavaPlugin {
     }
 
     /**
-     * @return the moneyProvider
+     * @return the walletProvider
      */
-    public Economy getMoneyProvider() {
-        return moneyProvider;
+    public Economy getWalletProvider() {
+        return walletProvider;
     }
 
     public void logException(Throwable ex, Level level, PluginComponent source) {
@@ -108,6 +116,16 @@ public class ECPlugin extends JavaPlugin {
         loadDependencies();
         loadPlaces();
         registerCommands();
+        getServer().getPluginManager().registerEvents(this, this);
+    }
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        player.sendMessage("Ayy lmao welcome!");
+        getDb().createBankAccount(centralBank.getPlayerId(player));
+        if (!getWalletProvider().hasAccount(player)) {
+            getWalletProvider().createPlayerAccount(player);
+        }
     }
 
     private ArrayList<Bank> loadBanks() {
@@ -147,6 +165,7 @@ public class ECPlugin extends JavaPlugin {
                 logException(ex, Level.SEVERE);
             }
         }
+        setupCentralBank();
     }
 
     private ArrayList<Market> loadMarkets() {
@@ -194,6 +213,10 @@ public class ECPlugin extends JavaPlugin {
         registerCommandExecutor(new WithdrawCommand(this), Commands.WITHDRAW);
     }
 
+    private void setupCentralBank() {
+        centralBank = new CentralBank(this);
+    }
+
     private boolean setupChat() {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
         chat = rsp.getProvider();
@@ -213,7 +236,7 @@ public class ECPlugin extends JavaPlugin {
         if (rsp == null) {
             return false;
         }
-        moneyProvider = rsp.getProvider();
+        walletProvider = rsp.getProvider();
         economy = new ECEconomy(this);
         return true;
     }

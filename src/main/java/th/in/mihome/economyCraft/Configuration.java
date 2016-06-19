@@ -63,6 +63,7 @@ public class Configuration extends PluginComponent {
     public final String TABLE_BANKS;
     public final String TABLE_MARKETS;
     public final String TABLE_TRANSACTIONS;
+    public final String TABLE_ACCOUNTS;
     public final int TARIFF_LINEAR;
     public final int TARIFF_LOG;
     public final int TARIFF_SQRT;
@@ -112,6 +113,7 @@ public class Configuration extends PluginComponent {
         TABLE_MARKETS = config.getString("database.tables.markets");
         TABLE_BANKS = config.getString("database.tables.banks");
         TABLE_TRANSACTIONS = config.getString("database.tables.transactions");
+        TABLE_ACCOUNTS = config.getString("database.tables.accounts");
 
         CREATE_TABLE_SQL = preprocess(getResourceAsString("createTables.sql"));
     }
