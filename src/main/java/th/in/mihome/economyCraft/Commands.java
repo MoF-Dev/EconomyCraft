@@ -33,7 +33,7 @@ public enum Commands {
     DEPOSIT("deposit"),
     BID("market_bid"),
     OFFER("market_offer"),
-    REMOVE_QUOTE("remove_market_bit"),
+    REMOVE_QUOTE("remove_market_bid"),
     LIST_QUOTES("list_market_quotes"),
     WITHDRAW("withdraw"),
     BUY("market_buy");

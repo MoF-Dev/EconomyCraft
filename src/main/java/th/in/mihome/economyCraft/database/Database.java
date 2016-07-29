@@ -23,8 +23,12 @@
  */
 package th.in.mihome.economyCraft.database;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
+import java.util.Enumeration;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import th.in.mihome.economyCraft.ECPlugin;
@@ -49,12 +53,14 @@ public class Database extends PluginComponent implements AutoCloseable {
         compileSql();
         connection = newConnection();
     }
+
     @Override
     public void close() throws Exception {
         if (isConnected()) {
             connection.close();
         }
     }
+
     public void createBankAccount(String accountName) {
         try {
             PreparedStatement ps = connection.prepareStatement(createBankAccountSql);
@@ -81,10 +87,10 @@ public class Database extends PluginComponent implements AutoCloseable {
         }
         return -1;
     }
+
     public Connection getConnection() {
         return connection;
     }
-
 
     /**
      * @return the connected
@@ -96,11 +102,21 @@ public class Database extends PluginComponent implements AutoCloseable {
     public boolean isValid() {
         try {
             return connection.isValid(plugin.config.DATABASE_TIMEOUT);
+
         } catch (SQLException ex) {
             plugin.logException(ex, Level.WARNING, this);
             return false;
+        } catch (AbstractMethodError ex) {
+            //plugin.logException(ex, Level.INFO, this); ERROR msg is wayy too long
+            plugin.getServer().getConsoleSender().sendMessage("Cannot precisely determine connection availability.");
+            try {
+                return !connection.isClosed(); // dk how to do better
+            } catch (SQLException ex1) {
+                return false;
+            }
         }
     }
+
     /**
      * Process the transaction command.
      *
@@ -180,6 +196,7 @@ public class Database extends PluginComponent implements AutoCloseable {
     public SelectStatement select() {
         return new SelectStatement(selectStmt);
     }
+
     public void updateBankAccount(String playerId, int amount) {
         try {
             PreparedStatement ps = connection.prepareStatement(updateBankAccountSql);
@@ -190,6 +207,7 @@ public class Database extends PluginComponent implements AutoCloseable {
             plugin.logException(ex, Level.SEVERE, this);
         }
     }
+
     private void compileSql() {
         transactionSql = String.format("insert into `%s` (`account`,`amount`,`type`,`time`,`reference`) values (?,?,?,?,?)",
                 plugin.config.TABLE_TRANSACTIONS);
@@ -216,16 +234,17 @@ public class Database extends PluginComponent implements AutoCloseable {
                 break;
             case SQLITE:
                 try {
+                    Class.forName("org.sqlite.JDBC");
                     conn = DriverManager.getConnection("jdbc:sqlite:"
-                            + plugin.config.SQLITE_FILE);
-                } catch (SQLException ex) {
+                            + new File(plugin.getDataFolder(), plugin.config.SQLITE_FILE).getCanonicalPath());
+                } catch (SQLException | IOException | ClassNotFoundException ex) {
                     plugin.logException(ex, Level.SEVERE, this);
                 }
         }
 
         if (conn != null) {
             try {
-                selectStmt = connection.createStatement();
+                selectStmt = conn.createStatement();
                 connected = true;
             } catch (SQLException ex) {
                 plugin.logException(ex, Level.SEVERE, this);

@@ -45,14 +45,14 @@ public abstract class BankingCommand extends PlayerCommand {
         try {
             Bank bank = Place.requireValidNearest(sender, plugin.getBanks());
             return onBankingCommand(sender, bank, command, label, args);
-        } catch(UnfulfilledRequirementException ex){
+        } catch (UnfulfilledRequirementException ex) {
             logAndTellSender(sender, Level.INFO, ex, this);
             return false;
         }
     }
-    
+
     public abstract boolean onBankingCommand(Player sender, Bank bank, Command command, String label, String[] args);
-    
+
     protected ItemStack getItemInBank(ItemStack itemPassed, Bank bank, Player player) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");

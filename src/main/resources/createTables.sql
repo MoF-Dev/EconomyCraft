@@ -26,20 +26,20 @@
  * Created: 21-May-2016
  */
 
-create table if not exists $bankTable
-    id int not null auto_increment primary key,
+create table if not exists $bankTable (
+    id integer not null primary key autoincrement,
     name varchar(255) not null,
     world varchar(63),
     x double not null,
     y double not null,
     z double not null,
-    address varchar(511);
+    address varchar(511));
 
-create table if not exists $marketTable
-    id int not null auto_increment primary key,
+create table if not exists $marketTable (
+    id integer not null primary key autoincrement,
     name varchar(255) not null,
     world varchar(63),
     x double not null,
     y double not null,
     z double not null,
-    address varchar(511);
+    address varchar(511));

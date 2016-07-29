@@ -32,7 +32,7 @@ import org.bukkit.entity.Player;
  *
  * @author Kolatat Thangkasemvathana
  */
-public abstract class PlayerCommand extends AbstractCommandExecutor{
+public abstract class PlayerCommand extends AbstractCommandExecutor {
 
     public PlayerCommand(ECPlugin plugin) {
         super(plugin);
@@ -43,12 +43,12 @@ public abstract class PlayerCommand extends AbstractCommandExecutor{
         try {
             Player player = requirePlayer(sender);
             return onPlayerCommand(player, command, label, args);
-        } catch(NonPlayerException ex){
+        } catch (NonPlayerException ex) {
             logAndTellSender(sender, Level.INFO, ex, this);
             return false;
         }
     }
-    
+
     public abstract boolean onPlayerCommand(Player sender, Command command, String label, String[] args);
-    
+
 }

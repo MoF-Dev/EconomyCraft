@@ -53,7 +53,7 @@ public class ListQuotesCommand extends TradingCommand {
                     quote.getQuantity(),
                     plugin.getWalletProvider().format(quote.getValue() / 100.0)));
         }
-        sender.sendMessage("You have "+count+" quote(s).");
+        sender.sendMessage("You have " + count + " quote(s).");
         return true;
     }
 

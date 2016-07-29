@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import th.in.mihome.economyCraft.banking.Bank;
@@ -108,16 +109,20 @@ public class ECPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        //saveConfig();
     }
 
     @Override
     public void onEnable() {
         loadConfiguration();
-        loadDependencies();
+        if (!loadDependencies()) {
+            return;
+        }
         loadPlaces();
         registerCommands();
         getServer().getPluginManager().registerEvents(this, this);
     }
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -143,29 +148,32 @@ public class ECPlugin extends JavaPlugin implements Listener {
     }
 
     private void loadConfiguration() {
+        saveDefaultConfig();
         config = new Configuration(this, getConfig());
     }
 
-    private void loadDependencies() {
+    private boolean loadDependencies() {
         if (!setupEconomy()) {
             getLogger().severe("Disabled due to no Vault dependency found!");
             getServer().getPluginManager().disablePlugin(this);
-            return;
+            return false;
         }
         setupPermissions();
         setupChat();
         if (!setupDatabase()) {
             getLogger().severe("Disabled due to database connection failure!");
             getServer().getPluginManager().disablePlugin(this);
-            return;
+            return false;
         } else {
             try {
                 database.getConnection().createStatement().executeUpdate(config.CREATE_TABLE_SQL);
             } catch (SQLException ex) {
                 logException(ex, Level.SEVERE);
+                return false;
             }
         }
         setupCentralBank();
+        return true;
     }
 
     private ArrayList<Market> loadMarkets() {
@@ -198,7 +206,11 @@ public class ECPlugin extends JavaPlugin implements Listener {
 
     private void registerCommandExecutor(CommandExecutor executor, Commands... commands) {
         for (Commands command : commands) {
-            getCommand(command.getName()).setExecutor(executor);
+            try {
+                getCommand(command.getName()).setExecutor(executor);
+            } catch (NullPointerException ex) {
+                getLogger().warning("Command " + command.getName() + " does not exist.");
+            }
         }
     }
 
@@ -219,6 +231,9 @@ public class ECPlugin extends JavaPlugin implements Listener {
 
     private boolean setupChat() {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+        if (chat == null) {
+            return false;
+        }
         chat = rsp.getProvider();
         return chat != null;
     }
@@ -229,11 +244,19 @@ public class ECPlugin extends JavaPlugin implements Listener {
     }
 
     private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+        Plugin p;
+        if ((p = getServer().getPluginManager().getPlugin("Vault")) == null) {
+            getLogger().warning("get Vault plugin returned null");
             return false;
+
         }
+        /*for(RegisteredServiceProvider rsp : getServer().getServicesManager().getRegistrations(p)){
+            System.out.printf("%s\t%s%n",rsp.getProvider().getClass().getName(), rsp.getService().getName());
+        }*/
+
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
+            getLogger().severe("Economy RSP not available. Make sure Vault's economy functionality is available.");
             return false;
         }
         walletProvider = rsp.getProvider();

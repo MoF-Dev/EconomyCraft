@@ -53,9 +53,11 @@ public class OfferCommand extends TradingCommand {
                 throw new InvalidArgumentException("You must offer some item!");
             }
             int amount = extractInt(args, 1, null);
-            if(amount<=0) amount = item.getAmount();
+            if (amount <= 0) {
+                amount = item.getAmount();
+            }
             item.setAmount(Math.min(item.getAmount(), amount));
-            int value = extractMonetaryValue(args,0, false,"Missing order price.");
+            int value = extractMonetaryValue(args, 0, false, "Missing order price.");
             // TODO warn player if this is a dum move?
             ensureGoods(sender, item);
             market.list(new Quote(sender, item, value, market, Quote.Side.OFFER));

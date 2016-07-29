@@ -24,14 +24,21 @@
 package th.in.mihome.economyCraft;
 
 import com.opencsv.CSVReader;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.util.FileUtil;
 import th.in.mihome.economyCraft.options.DatabaseEngine;
 import th.in.mihome.economyCraft.options.MatchingAlgorithm;
 
@@ -41,8 +48,8 @@ import th.in.mihome.economyCraft.options.MatchingAlgorithm;
  */
 public class Configuration extends PluginComponent {
 
-    private static String getResourceAsString(String resourceName) {
-        return new Scanner(Configuration.class.getResourceAsStream(resourceName), "UTF-8").useDelimiter("\\A").next();
+    private String getResourceAsString(String resourceName) {
+        return new Scanner(plugin.getResource(resourceName), "UTF-8").useDelimiter("\\A").next();
     }
     public final Material BANK_CORNERSTONE;
 
@@ -135,7 +142,12 @@ public class Configuration extends PluginComponent {
 
     private void readItemDb() {
         try {
-            CSVReader reader = new CSVReader(new FileReader("blockdb.csv"));
+            String itemDbName = "blockdb.csv";
+            File itemDbFile = new File(plugin.getDataFolder(), itemDbName);
+            if (!itemDbFile.exists()) {
+                plugin.saveResource(itemDbName, false);
+            }
+            CSVReader reader = new CSVReader(new FileReader(itemDbFile));
             String[] nextLine;
             reader.readNext();
             while ((nextLine = reader.readNext()) != null) {

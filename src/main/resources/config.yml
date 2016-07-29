@@ -45,7 +45,7 @@ banking:
 ai:
         
 database:
-    engine: MYSQL
+    engine: SQLITE
     timeout: 5
     mysql:
         host: host

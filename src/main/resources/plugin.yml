@@ -1,4 +1,4 @@
-name: ${project.artifactId}Plugin
+name: ${project.artifactId}
 main: th.in.mihome.economyCraft.ECPlugin
 version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
 description: ${project.description}

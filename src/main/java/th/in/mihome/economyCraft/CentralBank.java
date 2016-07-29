@@ -39,6 +39,7 @@ public class CentralBank extends PluginComponent {
     public CentralBank(ECPlugin plugin) {
         super(plugin);
     }
+
     public boolean deposit(OfflinePlayer player, int amount) {
         String playerId = getPlayerId(player);
         double dAmount = amount / 100d;
@@ -64,7 +65,6 @@ public class CentralBank extends PluginComponent {
         }
     }
 
-
     public int getAccountBalance(OfflinePlayer player) {
         return getAccountBalance(getPlayerId(player));
     }
@@ -73,7 +73,6 @@ public class CentralBank extends PluginComponent {
         return plugin.getDb().getBankAccount(accountName);
     }
 
-
     public OfflinePlayer getPlayer(String name) {
         return plugin.getServer().getOfflinePlayer(name);
     }
@@ -81,6 +80,7 @@ public class CentralBank extends PluginComponent {
     public OfflinePlayer getPlayer(UUID id) {
         return plugin.getServer().getOfflinePlayer(id);
     }
+
     /**
      * Retrieve a unique key associated with a player. The implementation of
      * what qualifies as a unique key depends on the plugin configuration. By
@@ -93,7 +93,6 @@ public class CentralBank extends PluginComponent {
         // TODO config.yml dependent implementation
         return player.getUniqueId().toString();
     }
-
 
     public boolean pay(OfflinePlayer from, OfflinePlayer to, int amount, PaymentMethod method) {
         double dAmount = amount / 100d;
@@ -120,6 +119,7 @@ public class CentralBank extends PluginComponent {
         }
         return false;
     }
+
     /**
      * Withdraw money from a player's account into his/her wallet.
      *
@@ -151,12 +151,15 @@ public class CentralBank extends PluginComponent {
             return false;
         }
     }
+
     private boolean prepareCash(OfflinePlayer player, int amount) {
         return plugin.getWalletProvider().has(player, amount / 100d);
     }
+
     private boolean prepareCredit(String accountName, int amount) {
         return getAccountBalance(accountName) >= amount;
     }
+
     public static enum PaymentMethod {
 
         /**

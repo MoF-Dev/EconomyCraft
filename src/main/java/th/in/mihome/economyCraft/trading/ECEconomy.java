@@ -78,8 +78,8 @@ public class ECEconomy extends PluginComponent {
             decrease weight based on amount
             loop through for entire grid
             use dijkstra algorithm to find shortest path.
-        */
-        
+         */
+
         ECItem i1 = plugin.config.getItemInfo(a.getBlock().getType());
         int weight = i1.getPathWeight();
 

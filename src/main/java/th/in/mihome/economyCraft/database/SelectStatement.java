@@ -70,9 +70,14 @@ public class SelectStatement {
     public ResultSet execute() throws SQLException {
         StringJoiner sj = new StringJoiner(", ");
         for (String col : columns) {
-            sj.add("`" + col + "`");
+            if (!"*".equals(col)) {
+                sj.add("`" + col + "`");
+            } else {
+                sj.add(col);
+            }
         }
         String sql = String.format("select %s %s from `%s`", qualifier, sj.toString(), from);
+        // System.out.println(sql);
         return stmt.executeQuery(sql);
     }
 }

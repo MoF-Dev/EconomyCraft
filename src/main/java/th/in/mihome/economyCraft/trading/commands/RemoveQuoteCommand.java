@@ -44,12 +44,12 @@ public class RemoveQuoteCommand extends TradingCommand {
     public boolean onTradingCommand(Player sender, Market market, Command command, String label, String[] args) {
         try {
             int quote_id = extractInt(args, 0, "Missing quote ID.");
-            market.remove(sender,quote_id);
+            market.remove(sender, quote_id);
             return true;
         } catch (InvalidArgumentException ex) {
             logAndTellSender(sender, Level.INFO, ex, this);
             return false;
         }
     }
-    
+
 }

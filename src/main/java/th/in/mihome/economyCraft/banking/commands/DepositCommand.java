@@ -48,7 +48,7 @@ public class DepositCommand extends BankingCommand {
     public boolean onBankingCommand(Player sender, Bank bank, Command command, String label, String[] args) {
         try {
             PlayerInventory inventory = sender.getInventory();
-            
+
             // maybe need to add the damage data and others.
             ItemStack itemPassed = getItemStackFromStringArgs(
                     extractString(args, 0, "Missing item."),
@@ -56,7 +56,7 @@ public class DepositCommand extends BankingCommand {
             ItemStack leftOver = inventory.removeItem(itemPassed).get(0);
             int amountRemoved = itemPassed.getAmount() - (leftOver == null ? 0 : leftOver.getAmount());
             // Removes item from inventory
-            
+
             if (!publishDeposit(sender, itemPassed, amountRemoved, bank)) {
                 // not success so return items removed
                 itemPassed.setAmount(amountRemoved);
@@ -71,10 +71,10 @@ public class DepositCommand extends BankingCommand {
             return false;
         }
     }
-    
+
     private boolean publishDeposit(Player player, ItemStack item, int amount, Bank bank) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 }
