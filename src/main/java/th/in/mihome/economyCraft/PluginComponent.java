@@ -23,6 +23,8 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.util.logging.Level;
+
 /**
  *
  * @author Kolatat Thangkasemvathana
@@ -33,6 +35,30 @@ public abstract class PluginComponent {
 
     public PluginComponent(ECPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    protected void info(String format, Object... args) {
+        log(Level.INFO, format, args);
+    }
+
+    protected void warning(String format, Object... args) {
+        log(Level.WARNING, format, args);
+    }
+
+    protected void severe(String format, Object... args) {
+        log(Level.SEVERE, format, args);
+    }
+
+    protected void log(Level level, String format, Object... args) {
+        plugin.getLogger().log(level, String.format("[%s] %s", getClass().getName(), String.format(format, args)));
+    }
+
+    protected void logException(Throwable ex, Level level) {
+        logException(ex, level, "No message.");
+    }
+
+    protected void logException(Throwable ex, Level level, String msg) {
+        plugin.getLogger().log(level, String.format("From [%s]: %s", getClass().getName(), msg), ex);
     }
 
 }

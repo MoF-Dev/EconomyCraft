@@ -26,9 +26,7 @@ package th.in.mihome.economyCraft.database;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.util.Enumeration;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import th.in.mihome.economyCraft.ECPlugin;
@@ -67,7 +65,7 @@ public class Database extends PluginComponent implements AutoCloseable {
             ps.setString(1, accountName);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            plugin.logException(ex, Level.SEVERE, this);
+            logException(ex, Level.SEVERE);
         }
     }
 
@@ -83,7 +81,7 @@ public class Database extends PluginComponent implements AutoCloseable {
                 return 0;
             }
         } catch (SQLException ex) {
-            plugin.logException(ex, Level.SEVERE, this);
+            logException(ex, Level.SEVERE);
         }
         return -1;
     }
@@ -104,7 +102,7 @@ public class Database extends PluginComponent implements AutoCloseable {
             return connection.isValid(plugin.config.DATABASE_TIMEOUT);
 
         } catch (SQLException ex) {
-            plugin.logException(ex, Level.WARNING, this);
+            logException(ex, Level.WARNING);
             return false;
         } catch (AbstractMethodError ex) {
             //plugin.logException(ex, Level.INFO, this); ERROR msg is wayy too long
@@ -161,8 +159,8 @@ public class Database extends PluginComponent implements AutoCloseable {
                         transLog.executeUpdate();
                         connection.commit();
                     } catch (SQLException ex) {
-                        plugin.logException(ex, Level.SEVERE, this);
-                        plugin.getLogger().log(Level.INFO, "Transaction is being rolled back.");
+                        logException(ex, Level.SEVERE);
+                        info("Transaction is being rolled back.");
                         connection.rollback();
                     } finally {
                         if (transLog != null) {
@@ -171,7 +169,7 @@ public class Database extends PluginComponent implements AutoCloseable {
                         connection.setAutoCommit(autoCommit);
                     }
                 } catch (SQLException ex) {
-                    plugin.logException(ex, Level.SEVERE, this);
+                    logException(ex, Level.SEVERE);
                 }
                 return new TransactionResult();
             } else {
@@ -180,7 +178,7 @@ public class Database extends PluginComponent implements AutoCloseable {
                 errorMessage += "Could not pay the receipient: " + eeResponse.errorMessage;
                 eeResponse = moneyProvider.depositPlayer(transaction.getBuyer(), doubleAmount);
                 if (!eeResponse.transactionSuccess()) {
-                    plugin.getLogger().log(Level.SEVERE, "Transaction failed and cannot repay buyer. Free money for die Fuhrer!");
+                    severe("Transaction failed and cannot repay buyer. Free money for die Fuhrer!");
                     errorCode = 6;
                     errorMessage += "Could not repay buyer: " + eeResponse.errorMessage;
                 }
@@ -204,7 +202,7 @@ public class Database extends PluginComponent implements AutoCloseable {
             ps.setString(2, playerId);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            plugin.logException(ex, Level.SEVERE, this);
+            logException(ex, Level.SEVERE);
         }
     }
 
@@ -229,7 +227,7 @@ public class Database extends PluginComponent implements AutoCloseable {
                             plugin.config.MYSQL_USER,
                             plugin.config.MYSQL_PASSWORD);
                 } catch (SQLException ex) {
-                    plugin.logException(ex, Level.SEVERE, this);
+                    logException(ex, Level.SEVERE);
                 }
                 break;
             case SQLITE:
@@ -238,7 +236,7 @@ public class Database extends PluginComponent implements AutoCloseable {
                     conn = DriverManager.getConnection("jdbc:sqlite:"
                             + new File(plugin.getDataFolder(), plugin.config.SQLITE_FILE).getCanonicalPath());
                 } catch (SQLException | IOException | ClassNotFoundException ex) {
-                    plugin.logException(ex, Level.SEVERE, this);
+                    logException(ex, Level.SEVERE);
                 }
         }
 
@@ -247,7 +245,7 @@ public class Database extends PluginComponent implements AutoCloseable {
                 selectStmt = conn.createStatement();
                 connected = true;
             } catch (SQLException ex) {
-                plugin.logException(ex, Level.SEVERE, this);
+                logException(ex, Level.SEVERE);
             }
         }
         return conn;

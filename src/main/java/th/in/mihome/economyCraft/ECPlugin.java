@@ -103,10 +103,6 @@ public class ECPlugin extends JavaPlugin implements Listener {
         return walletProvider;
     }
 
-    public void logException(Throwable ex, Level level, PluginComponent source) {
-        getLogger().log(level, String.format("From [%s]:", source.getClass().getName()), ex);
-    }
-
     @Override
     public void onDisable() {
         //saveConfig();

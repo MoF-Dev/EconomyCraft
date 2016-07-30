@@ -48,19 +48,17 @@ public class CentralBank extends PluginComponent {
                 plugin.getDb().updateBankAccount(playerId, amount);
                 return true;
             } else {
-                plugin.getLogger().warning(String.format(
-                        "MoneyProvider was unable to deduct $.2f from \"%s\" (%s)",
+                warning("MoneyProvider was unable to deduct $.2f from \"%s\" (%s)",
                         dAmount,
                         player.getName(),
-                        playerId));
+                        playerId);
                 return false;
             }
         } else {
             // not enough money in wallet
-            plugin.getLogger().info(String.format(
-                    "\"%s\" (%s) does not have the necessary cash.",
+            info("\"%s\" (%s) does not have the necessary cash.",
                     player.getName(),
-                    playerId));
+                    playerId);
             return false;
         }
     }
@@ -114,7 +112,7 @@ public class CentralBank extends PluginComponent {
                 }
                 break;
             default:
-                plugin.logException(new UnsupportedOperationException("Not yet implemented."), Level.SEVERE, this);
+                logException(new UnsupportedOperationException("Not yet implemented."), Level.SEVERE);
                 return false;
         }
         return false;
@@ -135,19 +133,17 @@ public class CentralBank extends PluginComponent {
             if (plugin.getWalletProvider().depositPlayer(player, dAmount).transactionSuccess()) {
                 return true;
             } else {
-                plugin.getLogger().warning(String.format(
-                        "MoneyProvider was unable to provide \"%s\" (%s) with $.2f.",
+                warning("MoneyProvider was unable to provide \"%s\" (%s) with $.2f.",
                         player.getName(),
                         playerId,
-                        dAmount));
+                        dAmount);
                 return false;
             }
         } else {
             // not enough money in account
-            plugin.getLogger().info(String.format(
-                    "\"%s\" (%s) does not have the necessary funds.",
+            info("\"%s\" (%s) does not have the necessary funds.",
                     player.getName(),
-                    playerId));
+                    playerId);
             return false;
         }
     }

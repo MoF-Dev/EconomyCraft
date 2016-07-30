@@ -24,7 +24,6 @@
 package th.in.mihome.economyCraft;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Material;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,7 +43,7 @@ public abstract class AbstractCommandExecutor extends PluginComponent implements
     }
 
     public void logAndTellSender(CommandSender sender, Level level, Throwable cause, PluginComponent source) {
-        plugin.logException(cause, level, source);
+        logException(cause, level);
         sender.sendMessage(cause.getMessage());
     }
 

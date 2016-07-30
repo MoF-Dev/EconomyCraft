@@ -24,21 +24,15 @@
 package th.in.mihome.economyCraft;
 
 import com.opencsv.CSVReader;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.util.FileUtil;
 import th.in.mihome.economyCraft.options.DatabaseEngine;
 import th.in.mihome.economyCraft.options.MatchingAlgorithm;
 
@@ -165,7 +159,7 @@ public class Configuration extends PluginComponent {
                 itemDatabase.put(item.getMaterial(), item);
             }
         } catch (IOException ex) {
-            plugin.logException(ex, Level.SEVERE, this);
+            logException(ex, Level.SEVERE);
         }
     }
 }
