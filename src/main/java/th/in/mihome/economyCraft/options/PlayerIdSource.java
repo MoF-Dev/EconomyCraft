@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 Kolatat Thangkasemvathana.
+ * Copyright 2016 Kolatat Thangkasemvathana <kolatat.t@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,40 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package th.in.mihome.economyCraft;
-
-import org.bukkit.command.Command;
+package th.in.mihome.economyCraft.options;
 
 /**
  *
- * @author Kolatat Thangkasemvathana
+ * @author Kolatat Thangkasemvathana <kolatat.t@gmail.com>
  */
-public enum Commands {
-    DEPOSIT("deposit"),
-    BID("market_bid"),
-    OFFER("market_offer"),
-    REMOVE_QUOTE("remove_quote"),
-    LIST_QUOTES("list_market_quotes"),
-    WITHDRAW("withdraw"),
-    BUY("market_buy");
-
-    public static Commands getCommand(Command cmd) {
-        for (Commands cmds : values()) {
-            if (cmds.name.equalsIgnoreCase(cmd.getName())) {
-                return cmds;
-            }
-        }
-        return null;
-    }
-
-    private final String name;
-
-    private Commands(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
+public enum PlayerIdSource {
+    UNIQUE_ID, NAME
 }

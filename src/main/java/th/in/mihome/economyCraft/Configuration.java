@@ -35,6 +35,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import th.in.mihome.economyCraft.options.DatabaseEngine;
 import th.in.mihome.economyCraft.options.MatchingAlgorithm;
+import th.in.mihome.economyCraft.options.PlayerIdSource;
 
 /**
  *
@@ -47,6 +48,7 @@ public class Configuration extends PluginComponent {
     }
     public final Material BANK_CORNERSTONE;
 
+    public final PlayerIdSource PLAYER_ID_SOURCE;
     public final double BANK_RADIUS;
     public final ConfigurationSection COMMODITIES_TAXING;
     public final String CREATE_TABLE_SQL;
@@ -78,6 +80,8 @@ public class Configuration extends PluginComponent {
 
     public Configuration(ECPlugin plugin, FileConfiguration config) {
         super(plugin);
+        
+        PLAYER_ID_SOURCE = PlayerIdSource.valueOf(config.getString("plugin.player_id_source"));
 
         itemDatabase = new HashMap<>(300);
         readItemDb();

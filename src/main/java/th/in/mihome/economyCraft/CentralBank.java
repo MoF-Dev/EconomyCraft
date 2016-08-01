@@ -88,8 +88,14 @@ public class CentralBank extends PluginComponent {
      * @return A unique, persistent key associated with the given player.
      */
     public String getPlayerId(OfflinePlayer player) {
-        // TODO config.yml dependent implementation
-        return player.getUniqueId().toString();
+        switch (plugin.config.PLAYER_ID_SOURCE) {
+            case NAME:
+                return player.getName();
+            case UNIQUE_ID:
+                return player.getUniqueId().toString();
+            default:
+                return String.valueOf(player.hashCode());
+        }
     }
 
     public boolean pay(OfflinePlayer from, OfflinePlayer to, int amount, PaymentMethod method) {
