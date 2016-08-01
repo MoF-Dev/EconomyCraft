@@ -56,9 +56,9 @@ public class WithdrawCommand extends BankingCommand {
             PlayerInventory inventory = sender.getInventory();
             ECItemStack returnedItem = getItemInBank(itemPassed.getItem(), bank, sender);
             // NEEDS SERIOUS CHECKING
-            if (returnedItem.getQuantity()> itemPassed.getQuantity()) {
+            if (returnedItem.getQuantity() > itemPassed.getQuantity()) {
                 int amountWithdrawn = Math.min(returnedItem.getQuantity(), itemPassed.getQuantity());
-                ECItemStack leftover = new ECItemStack(itemPassed.getItem(), returnedItem.getQuantity()- itemPassed.getQuantity());
+                ECItemStack leftover = new ECItemStack(itemPassed.getItem(), returnedItem.getQuantity() - itemPassed.getQuantity());
                 ECItemStack itemAdded = new ECItemStack(itemPassed.getItem(), amountWithdrawn);
                 inventory.addItem(itemAdded.getMcItemStack());
 
@@ -74,7 +74,7 @@ public class WithdrawCommand extends BankingCommand {
             }
             return true;
         } catch (InvalidArgumentException ex) {
-            logAndTellSender(sender, Level.INFO, ex, this);
+            logAndTellSender(sender, InvalidArgumentException.DEFAULT_LOG_LEVEL, ex, this);
             return false;
         }
     }

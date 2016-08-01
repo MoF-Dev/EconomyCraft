@@ -45,7 +45,7 @@ public abstract class TradingCommand extends PlayerCommand {
             Market market = Place.requireValidNearest(sender, plugin.getMarkets());
             return onTradingCommand(sender, market, command, label, args);
         } catch (UnfulfilledRequirementException ex) {
-            logAndTellSender(sender, Level.INFO, ex, this);
+            logAndTellSender(sender, UnfulfilledRequirementException.DEFAULT_LOG_LEVEL, ex, this);
             return false;
         }
     }

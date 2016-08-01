@@ -23,11 +23,15 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.util.logging.Level;
+
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
 public class InvalidArgumentException extends UnfulfilledRequirementException {
+
+    public static final Level DEFAULT_LOG_LEVEL = Level.FINER;
 
     public InvalidArgumentException(String format, Object... args) {
         super(format, args);

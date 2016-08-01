@@ -46,7 +46,7 @@ public abstract class BankingCommand extends PlayerCommand {
             Bank bank = Place.requireValidNearest(sender, plugin.getBanks());
             return onBankingCommand(sender, bank, command, label, args);
         } catch (UnfulfilledRequirementException ex) {
-            logAndTellSender(sender, Level.INFO, ex, this);
+            logAndTellSender(sender, UnfulfilledRequirementException.DEFAULT_LOG_LEVEL, ex, this);
             return false;
         }
     }

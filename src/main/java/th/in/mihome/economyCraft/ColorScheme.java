@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 Kolatat Thangkasemvathana.
+ * Copyright 2016 Kolatat Thangkasemvathana <kolatat.t@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,17 @@
  */
 package th.in.mihome.economyCraft;
 
-import java.util.logging.Level;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
 
 /**
  *
- * @author Kolatat Thangkasemvathana
+ * @author Kolatat Thangkasemvathana <kolatat.t@gmail.com>
  */
-public class NonPlayerException extends UnfulfilledRequirementException {
-
-    public static final Level DEFAULT_LOG_LEVEL = Level.FINEST;
-
-    public NonPlayerException() {
-        super("A non-player was provided when the environment required a player.");
-    }
+public class ColorScheme {
+    // fields are config-dependent
+    // TODO access and init from plugin.config
+    //      currently defined explicitly
+    public final ChatColor WARNING = ChatColor.YELLOW;
+    public final ChatColor ERROR = ChatColor.RED;
 }

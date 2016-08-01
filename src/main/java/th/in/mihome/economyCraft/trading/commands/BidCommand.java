@@ -53,7 +53,7 @@ public class BidCommand extends TradingCommand {
             sender.sendMessage("Bid listed.");
             return true;
         } catch (InvalidArgumentException ex) {
-            logAndTellSender(sender, Level.INFO, ex, market);
+            logAndTellSender(sender, InvalidArgumentException.DEFAULT_LOG_LEVEL, ex, market);
             return false;
         }
     }

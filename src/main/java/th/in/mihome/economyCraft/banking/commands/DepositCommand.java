@@ -55,7 +55,7 @@ public class DepositCommand extends BankingCommand {
             ECItemStack itemPassed = plugin.getItemStack(extractString(args, 0, "Missing item."),
                     extractInt(args, 1, "Missing amount"));
             ItemStack leftOver = inventory.removeItem(itemPassed.getMcItemStack()).get(0);
-            int amountRemoved = itemPassed.getQuantity()- (leftOver == null ? 0 : leftOver.getAmount());
+            int amountRemoved = itemPassed.getQuantity() - (leftOver == null ? 0 : leftOver.getAmount());
             // Removes item from inventory
 
             if (!publishDeposit(sender, itemPassed.getItem(), amountRemoved, bank)) {
@@ -68,7 +68,7 @@ public class DepositCommand extends BankingCommand {
             }
             return true;
         } catch (InvalidArgumentException ex) {
-            logAndTellSender(sender, Level.INFO, ex, this);
+            logAndTellSender(sender, InvalidArgumentException.DEFAULT_LOG_LEVEL, ex, this);
             return false;
         }
     }

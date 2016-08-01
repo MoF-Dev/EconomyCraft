@@ -83,12 +83,12 @@ public class ECPlugin extends JavaPlugin implements Listener {
     public Database getDb() {
         return database;
     }
-    
-    public ECItem getItem(ItemStack itemStack){
+
+    public ECItem getItem(ItemStack itemStack) {
         return config.getItemInfo(itemStack.getType());
     }
-    
-    public ECItemStack getItemStack(String descriptor, int quantity){
+
+    public ECItemStack getItemStack(String descriptor, int quantity) {
         return new ECItemStack(getItem(descriptor), quantity);
     }
 

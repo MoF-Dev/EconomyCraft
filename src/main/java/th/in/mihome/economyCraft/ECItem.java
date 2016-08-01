@@ -47,8 +47,8 @@ public class ECItem {
         this.pathWeight = pathWeight;
         mcItem = new ItemStack(Material.getMaterial(minecraftName));
         // item.setDurability((short) durability); // should be implicit in minecraftName
-        this.durability = durability==-1?mcItem.getDurability():durability;
-        assert(this.durability==mcItem.getDurability());
+        this.durability = durability == -1 ? mcItem.getDurability() : durability;
+        assert (this.durability == mcItem.getDurability());
     }
 
     /**
@@ -95,11 +95,11 @@ public class ECItem {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof ECItem){
+        if (obj instanceof ECItem) {
             return ((ECItem) obj).mcItem.isSimilar(mcItem);
-        } else if(obj instanceof ItemStack){
+        } else if (obj instanceof ItemStack) {
             return ((ItemStack) obj).isSimilar(mcItem);
-        } else if(obj instanceof Material){
+        } else if (obj instanceof Material) {
             return ((Material) obj).equals(mcItem.getType());
         } else {
             return false;

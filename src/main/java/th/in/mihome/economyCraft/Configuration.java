@@ -72,6 +72,7 @@ public class Configuration extends PluginComponent {
     public final int TAX_LOCAL_MARKET;
     public final int TAX_PRIVATE_MARKET;
     public final int TRADING_QUEUE_INITIAL_SIZE;
+    public final ColorScheme COLOR_SCHEME;
 
     final HashMap<Material, ECItem> itemDatabase;
 
@@ -117,6 +118,8 @@ public class Configuration extends PluginComponent {
         TABLE_ACCOUNTS = config.getString("database.tables.accounts");
 
         CREATE_TABLE_SQL = preprocess(getResourceAsString("createTables.sql"));
+        
+        COLOR_SCHEME = new ColorScheme();
     }
 
     public ECItem getItemInfo(Material material) {

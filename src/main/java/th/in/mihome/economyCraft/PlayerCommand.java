@@ -44,7 +44,7 @@ public abstract class PlayerCommand extends AbstractCommandExecutor {
             Player player = requirePlayer(sender);
             return onPlayerCommand(player, command, label, args);
         } catch (NonPlayerException ex) {
-            logAndTellSender(sender, Level.INFO, ex, this);
+            logAndTellSender(sender, NonPlayerException.DEFAULT_LOG_LEVEL, ex, this);
             return false;
         }
     }

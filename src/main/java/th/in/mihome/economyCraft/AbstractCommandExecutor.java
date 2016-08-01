@@ -24,6 +24,7 @@
 package th.in.mihome.economyCraft;
 
 import java.util.logging.Level;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,7 +45,11 @@ public abstract class AbstractCommandExecutor extends PluginComponent implements
 
     public void logAndTellSender(CommandSender sender, Level level, Throwable cause, PluginComponent source) {
         logException(cause, level);
-        sender.sendMessage(cause.getMessage());
+        ChatColor color = plugin.config.COLOR_SCHEME.ERROR;
+        if (cause instanceof UnfulfilledRequirementException) {
+            color = plugin.config.COLOR_SCHEME.WARNING;
+        }
+        sender.sendMessage(color + cause.getMessage());
     }
 
     public static String extractString(String[] args, int index, String errMsg) throws InvalidArgumentException {

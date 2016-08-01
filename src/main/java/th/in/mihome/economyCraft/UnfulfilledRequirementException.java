@@ -23,11 +23,15 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.util.logging.Level;
+
 /**
  *
  * @author Kolatat Thangkasemvathana
  */
 public class UnfulfilledRequirementException extends Exception {
+
+    public static final Level DEFAULT_LOG_LEVEL = Level.FINE;
 
     public UnfulfilledRequirementException() {
     }

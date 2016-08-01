@@ -59,9 +59,9 @@ public class OfferCommand extends TradingCommand {
             }
             mcItem.setAmount(Math.min(mcItem.getAmount(), amount));
             int value = extractMonetaryValue(args, 0, false, "Missing order price.");
-            
+
             ECItem item = plugin.getItem(mcItem);
-            
+
             // TODO warn player if this is a dum move?
             // Okay to use ItemStack since this directly deals with player's inventory.
             ensureGoods(sender, mcItem);
@@ -69,7 +69,7 @@ public class OfferCommand extends TradingCommand {
             sender.sendMessage("Order listed.");
             return true;
         } catch (UnfulfilledRequirementException ex) {
-            logAndTellSender(sender, Level.INFO, ex, market);
+            logAndTellSender(sender, UnfulfilledRequirementException.DEFAULT_LOG_LEVEL, ex, market);
             return false;
         }
     }

@@ -29,9 +29,11 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * An ECItem with quantity.
+ *
  * @author Kolatat Thangkasemvathana <kolatat.t@gmail.com>
  */
 public class ECItemStack {
+
     private ECItem item;
     private int quantity;
 
@@ -70,21 +72,21 @@ public class ECItemStack {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof ECItemStack){
+        if (obj instanceof ECItemStack) {
             ECItemStack objIs = (ECItemStack) obj;
-            return objIs.equals(item) && objIs.quantity==quantity;
-        } else if(obj instanceof ECItem){
+            return objIs.equals(item) && objIs.quantity == quantity;
+        } else if (obj instanceof ECItem) {
             return ((ECItem) obj).equals(item);
-        } else if(obj instanceof ItemStack){
+        } else if (obj instanceof ItemStack) {
             ItemStack objIs = (ItemStack) obj;
-            return objIs.getType().equals(item.getMaterial()) && objIs.getAmount()==quantity;
-        } else if(obj instanceof Material){
+            return objIs.getType().equals(item.getMaterial()) && objIs.getAmount() == quantity;
+        } else if (obj instanceof Material) {
             return ((Material) obj).equals(item.getMaterial());
         }
         return false;
     }
-    
-    public ItemStack getMcItemStack(){
+
+    public ItemStack getMcItemStack() {
         return new ItemStack(item.getMaterial(), quantity, (short) item.getDurability());
     }
 
@@ -95,5 +97,5 @@ public class ECItemStack {
         hash = 89 * hash + this.quantity;
         return hash;
     }
-    
+
 }

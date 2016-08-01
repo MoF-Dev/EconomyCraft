@@ -47,7 +47,7 @@ public class RemoveQuoteCommand extends TradingCommand {
             market.remove(sender, quote_id);
             return true;
         } catch (InvalidArgumentException ex) {
-            logAndTellSender(sender, Level.INFO, ex, this);
+            logAndTellSender(sender, InvalidArgumentException.DEFAULT_LOG_LEVEL, ex, this);
             return false;
         }
     }

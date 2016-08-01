@@ -51,7 +51,7 @@ public class BuyCommand extends TradingCommand {
             market.buy(sender, item, quantity, value);
             return true;
         } catch (InvalidArgumentException ex) {
-            logAndTellSender(sender, Level.INFO, ex, this);
+            logAndTellSender(sender, InvalidArgumentException.DEFAULT_LOG_LEVEL, ex, this);
             return false;
         }
     }
