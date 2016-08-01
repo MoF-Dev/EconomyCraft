@@ -46,8 +46,8 @@ public class ListQuotesCommand extends TradingCommand {
             count++;
             sender.sendMessage(String.format("#%d - %s (%d:%d) %s %d at %s",
                     quote.getId(),
-                    quote.getItem().getType(),
-                    quote.getItem().getTypeId(),
+                    quote.getItem().getMaterial(),
+                    quote.getItem().getId(),
                     quote.getItem().getDurability(),
                     quote.getSide(),
                     quote.getQuantity(),

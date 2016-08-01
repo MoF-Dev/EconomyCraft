@@ -73,7 +73,7 @@ public class Configuration extends PluginComponent {
     public final int TAX_PRIVATE_MARKET;
     public final int TRADING_QUEUE_INITIAL_SIZE;
 
-    private final HashMap<Material, ECItem> itemDatabase;
+    final HashMap<Material, ECItem> itemDatabase;
 
     public Configuration(ECPlugin plugin, FileConfiguration config) {
         super(plugin);

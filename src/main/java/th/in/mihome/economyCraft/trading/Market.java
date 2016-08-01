@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import th.in.mihome.economyCraft.ECItem;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.Place;
 import th.in.mihome.economyCraft.database.Transaction;
@@ -44,7 +44,7 @@ import th.in.mihome.economyCraft.database.TransactionType;
  */
 public class Market extends Place {
 
-    HashMap<ItemStack, QuoteMatcher> matchers = new HashMap<>();
+    HashMap<ECItem, QuoteMatcher> matchers = new HashMap<>();
 
     public Market(ECPlugin plugin, ResultSet rs) throws SQLException {
         this(plugin,
@@ -74,7 +74,7 @@ public class Market extends Place {
         return location.getBlock().getType() == plugin.config.MARKET_CORNERSTONE;
     }
 
-    public Quote seeBest(ItemStack type, Quote.Side side) {
+    public Quote seeBest(ECItem type, Quote.Side side) {
         QuoteMatcher matcher = matchers.get(type);
         if (matcher == null) {
             return null;
@@ -120,7 +120,7 @@ public class Market extends Place {
     }
 
     public void match() {
-        for (Entry<ItemStack, QuoteMatcher> itemEntry : matchers.entrySet()) {
+        for (Entry<ECItem, QuoteMatcher> itemEntry : matchers.entrySet()) {
             if (itemEntry.getValue().getBids().isEmpty() || itemEntry.getValue().getOffers().isEmpty()) {
                 continue;
             }
@@ -139,7 +139,7 @@ public class Market extends Place {
             }
             Quote bestBid = Collections.max(bids, (q1, q2) -> itemEntry.getValue().compare(q1, q2, this));
             Quote bestOffer = Collections.max(offers, (q1, q2) -> itemEntry.getValue().compare(q1, q2, this));
-            assert (bestBid.getItem().isSimilar(bestOffer.getItem()));
+            assert (bestBid.getItem() == bestOffer.getItem());
             bestBid.getMarket().unlist(bestBid);
             bestOffer.getMarket().unlist(bestOffer);
 
@@ -165,7 +165,7 @@ public class Market extends Place {
         }
     }
 
-    public void buy(Player player, ItemStack item, int value) {
+    public void buy(Player player, ECItem item, int quantity, int value) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }

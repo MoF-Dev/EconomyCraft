@@ -129,20 +129,12 @@ public abstract class AbstractCommandExecutor extends PluginComponent implements
         goods.setAmount(amountTaken);
         assert (amountTaken >= 0);
         if (amountTaken == 0) {
-            throw new UnfulfilledRequirementException("You do not have the specified goods in your inventtory.");
+            throw new UnfulfilledRequirementException("You do not have the specified goods in your inventory.");
         }
         return goods;
     }
 
-    public static ItemStack getItemStackFromStringArgs(String material, String amount) throws InvalidArgumentException {
-        String[] materialParts = material.split(",");
-        if (materialParts.length > 1) {
-            return getItemStackFromStringArgs(materialParts[0], amount, materialParts[1]);
-        } else {
-            return getItemStackFromStringArgs(material, amount, "0");
-        }
-    }
-
+    @Deprecated
     public static ItemStack getItemStackFromStringArgs(String material, String amount, String damage) throws InvalidArgumentException {
         Material realMaterial;
         try {

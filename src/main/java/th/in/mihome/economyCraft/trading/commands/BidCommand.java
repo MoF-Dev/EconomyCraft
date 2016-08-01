@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import th.in.mihome.economyCraft.ECItem;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.InvalidArgumentException;
 import th.in.mihome.economyCraft.trading.Market;
@@ -45,11 +46,10 @@ public class BidCommand extends TradingCommand {
     @Override
     public boolean onTradingCommand(Player sender, Market market, Command command, String label, String[] args) {
         try {
-            ItemStack item = getItemStackFromStringArgs(
-                    extractString(args, 0, "Missing goods."),
-                    extractString(args, 1, "Missing amount."));
+            ECItem item = plugin.getItem(extractString(args, 0, "Missing goods."));
+            int quantity = extractInt(args, 1, "Missing amount.");
             int value = extractMonetaryValue(args, 2, false, "Missing bid price.");
-            market.list(new Quote(sender, item, value, market, Quote.Side.BID));
+            market.list(new Quote(sender, item, quantity, value, market, Quote.Side.BID));
             sender.sendMessage("Bid listed.");
             return true;
         } catch (InvalidArgumentException ex) {

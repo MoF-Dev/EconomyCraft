@@ -31,11 +31,13 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Material;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -80,6 +82,59 @@ public class ECPlugin extends JavaPlugin implements Listener {
 
     public Database getDb() {
         return database;
+    }
+    
+    public ECItem getItem(ItemStack itemStack){
+        return config.getItemInfo(itemStack.getType());
+    }
+    
+    public ECItemStack getItemStack(String descriptor, int quantity){
+        return new ECItemStack(getItem(descriptor), quantity);
+    }
+
+    public ECItem getItem(String descriptor) {
+        String searchParts[] = descriptor.split(":");
+        Material material = Material.getMaterial(searchParts[0]);
+        ECItem result = null;
+        if (material != null) {
+            result = config.getItemInfo(material);
+        }
+        if (result != null) {
+            return result;
+        }
+
+        boolean searchById = false;
+        int itemId = 0;
+        try {
+            itemId = Integer.parseInt(searchParts[0]);
+            searchById = true;
+        } catch (NumberFormatException ex) {
+        }
+
+        boolean explicitDurability = false;
+        int durability = 0;
+        if (searchParts.length > 1) {
+            try {
+                durability = Integer.parseInt(searchParts[1]);
+                explicitDurability = true;
+            } catch (NumberFormatException ex) {
+            }
+        }
+
+        for (ECItem item : config.itemDatabase.values()) {
+            if (searchById) {
+                if (item.getId() == itemId && item.getDurability() == durability) {
+                    return item;
+                }
+            } else if (item.getDisplayName().equalsIgnoreCase(searchParts[0]) || item.getMinecraftName().equalsIgnoreCase(searchParts[0])) {
+                // check damage only when explicitly specified, damage is optional if e.g. name="DARK_OAK_shit"
+                if (explicitDurability && item.getDurability() != durability) {
+                    continue;
+                }
+                return item;
+            }
+        }
+        return null;
     }
 
     /**

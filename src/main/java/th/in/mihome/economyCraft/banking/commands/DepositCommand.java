@@ -30,6 +30,8 @@ import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import th.in.mihome.economyCraft.ECItem;
+import th.in.mihome.economyCraft.ECItemStack;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.InvalidArgumentException;
 import th.in.mihome.economyCraft.banking.Bank;
@@ -50,17 +52,16 @@ public class DepositCommand extends BankingCommand {
             PlayerInventory inventory = sender.getInventory();
 
             // maybe need to add the damage data and others.
-            ItemStack itemPassed = getItemStackFromStringArgs(
-                    extractString(args, 0, "Missing item."),
-                    extractString(args, 1, "Missing amount"));
-            ItemStack leftOver = inventory.removeItem(itemPassed).get(0);
-            int amountRemoved = itemPassed.getAmount() - (leftOver == null ? 0 : leftOver.getAmount());
+            ECItemStack itemPassed = plugin.getItemStack(extractString(args, 0, "Missing item."),
+                    extractInt(args, 1, "Missing amount"));
+            ItemStack leftOver = inventory.removeItem(itemPassed.getMcItemStack()).get(0);
+            int amountRemoved = itemPassed.getQuantity()- (leftOver == null ? 0 : leftOver.getAmount());
             // Removes item from inventory
 
-            if (!publishDeposit(sender, itemPassed, amountRemoved, bank)) {
+            if (!publishDeposit(sender, itemPassed.getItem(), amountRemoved, bank)) {
                 // not success so return items removed
-                itemPassed.setAmount(amountRemoved);
-                ItemStack errorStack = inventory.addItem(itemPassed).get(0);
+                itemPassed.setQuantity(amountRemoved);
+                ItemStack errorStack = inventory.addItem(itemPassed.getMcItemStack()).get(0);
                 if (errorStack != null) {
                     // we've got items we cant return - LET THE GOVT TAKE IT
                 }
@@ -72,7 +73,8 @@ public class DepositCommand extends BankingCommand {
         }
     }
 
-    private boolean publishDeposit(Player player, ItemStack item, int amount, Bank bank) {
+    // might be better to use ECItemStack instead of ECitem since ECItemSTack = ECItem+amount
+    private boolean publishDeposit(Player player, ECItem item, int amount, Bank bank) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }

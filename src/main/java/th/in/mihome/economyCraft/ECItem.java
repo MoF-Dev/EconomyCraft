@@ -23,7 +23,9 @@
  */
 package th.in.mihome.economyCraft;
 
+import java.util.Objects;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -32,26 +34,28 @@ import org.bukkit.Material;
 public class ECItem {
 
     private final int id;
-    private final int damage;
+    private final int durability;
     private final String displayName;
     private final String minecraftName;
     private final int pathWeight;
-    private final Material material;
+    private final ItemStack mcItem;
 
-    public ECItem(int id, int damage, String displayName, String minecraftName, int pathWeight) {
+    ECItem(int id, int durability, String displayName, String minecraftName, int pathWeight) {
         this.id = id;
-        this.damage = damage;
         this.displayName = displayName;
         this.minecraftName = minecraftName;
         this.pathWeight = pathWeight;
-        material = Material.getMaterial(minecraftName);
+        mcItem = new ItemStack(Material.getMaterial(minecraftName));
+        // item.setDurability((short) durability); // should be implicit in minecraftName
+        this.durability = durability==-1?mcItem.getDurability():durability;
+        assert(this.durability==mcItem.getDurability());
     }
 
     /**
-     * @return the damage
+     * @return the durability
      */
-    public int getDamage() {
-        return damage;
+    public int getDurability() {
+        return durability;
     }
 
     /**
@@ -72,7 +76,7 @@ public class ECItem {
      * @return the material
      */
     public Material getMaterial() {
-        return material;
+        return mcItem.getType();
     }
 
     /**
@@ -87,6 +91,28 @@ public class ECItem {
      */
     public int getPathWeight() {
         return pathWeight;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ECItem){
+            return ((ECItem) obj).mcItem.isSimilar(mcItem);
+        } else if(obj instanceof ItemStack){
+            return ((ItemStack) obj).isSimilar(mcItem);
+        } else if(obj instanceof Material){
+            return ((Material) obj).equals(mcItem.getType());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        ItemStack singleItem = new ItemStack(this.mcItem);
+        singleItem.setAmount(1);
+        hash = 53 * hash + Objects.hashCode(singleItem);
+        return hash;
     }
 
 }

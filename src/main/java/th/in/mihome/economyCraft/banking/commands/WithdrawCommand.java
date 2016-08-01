@@ -30,6 +30,8 @@ import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import th.in.mihome.economyCraft.ECItem;
+import th.in.mihome.economyCraft.ECItemStack;
 import th.in.mihome.economyCraft.ECPlugin;
 import th.in.mihome.economyCraft.InvalidArgumentException;
 import th.in.mihome.economyCraft.banking.Bank;
@@ -47,28 +49,27 @@ public class WithdrawCommand extends BankingCommand {
     @Override
     public boolean onBankingCommand(Player sender, Bank bank, Command command, String label, String[] args) {
         try {
-            ItemStack itemPassed = getItemStackFromStringArgs(
+            ECItemStack itemPassed = plugin.getItemStack(
                     extractString(args, 0, "Missing item."),
-                    extractString(args, 1, "Missing amount"));
-            int amount = itemPassed.getAmount();
+                    extractInt(args, 1, "Missing amount"));
+            int amount = itemPassed.getQuantity();
             PlayerInventory inventory = sender.getInventory();
-            ItemStack returnedItem = getItemInBank(itemPassed, bank, sender);
+            ECItemStack returnedItem = getItemInBank(itemPassed.getItem(), bank, sender);
             // NEEDS SERIOUS CHECKING
-            if (returnedItem.getAmount() > itemPassed.getAmount()) {
-                int amountWithdrawn = Math.min(returnedItem.getAmount(), itemPassed.getAmount());
-                ItemStack leftover = new ItemStack(Material.getMaterial(args[0]), returnedItem.getAmount() - itemPassed.getAmount());
-                ItemStack itemAdded = new ItemStack(Material.getMaterial(args[0]), amountWithdrawn);
-                inventory.addItem(itemAdded);
+            if (returnedItem.getQuantity()> itemPassed.getQuantity()) {
+                int amountWithdrawn = Math.min(returnedItem.getQuantity(), itemPassed.getQuantity());
+                ECItemStack leftover = new ECItemStack(itemPassed.getItem(), returnedItem.getQuantity()- itemPassed.getQuantity());
+                ECItemStack itemAdded = new ECItemStack(itemPassed.getItem(), amountWithdrawn);
+                inventory.addItem(itemAdded.getMcItemStack());
 
-                if (!publishWithdraw(sender, itemAdded, amountWithdrawn, bank)) {
-                    itemPassed.setAmount(amountWithdrawn);
-                    inventory.remove(itemPassed);
+                if (!publishWithdraw(sender, itemAdded, bank)) {
+                    itemPassed.setQuantity(amountWithdrawn);
+                    inventory.remove(itemPassed.getMcItemStack());
                 }
             } else {
-                inventory.addItem(itemPassed);
-                if (!publishWithdraw(sender, itemPassed, amount, bank)) {
-                    itemPassed.setAmount(amount);
-                    inventory.remove(itemPassed);
+                inventory.addItem(itemPassed.getMcItemStack());
+                if (!publishWithdraw(sender, itemPassed, bank)) {
+                    inventory.remove(itemPassed.getMcItemStack());
                 }
             }
             return true;
@@ -78,7 +79,7 @@ public class WithdrawCommand extends BankingCommand {
         }
     }
 
-    private boolean publishWithdraw(Player player, ItemStack item, int amount, Bank bank) {
+    private boolean publishWithdraw(Player player, ECItemStack itemStack, Bank bank) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }

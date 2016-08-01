@@ -24,7 +24,7 @@
 package th.in.mihome.economyCraft.trading;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import th.in.mihome.economyCraft.ECItem;
 
 /**
  *
@@ -34,15 +34,17 @@ public class Quote {
 
     private int id;
     private final Player trader;
-    private final ItemStack item;
+    private final ECItem item;
+    private final int quantity;
     private final int value;
     private final long time;
     private final Market market;
     private final Side side;
 
-    public Quote(Player trader, ItemStack item, int value, Market market, Side side) {
+    public Quote(Player trader, ECItem item, int quantity, int value, Market market, Side side) {
         this.trader = trader;
         this.item = item;
+        this.quantity = quantity;
         this.value = value;
         this.time = System.currentTimeMillis();
         this.market = market;
@@ -66,7 +68,7 @@ public class Quote {
     /**
      * @return the item
      */
-    public ItemStack getItem() {
+    public ECItem getItem() {
         return item;
     }
 
@@ -88,7 +90,7 @@ public class Quote {
      * @return the quantity
      */
     public int getQuantity() {
-        return getItem().getAmount();
+        return quantity;
     }
 
     /**

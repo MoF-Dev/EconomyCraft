@@ -53,7 +53,7 @@ public abstract class BankingCommand extends PlayerCommand {
 
     public abstract boolean onBankingCommand(Player sender, Bank bank, Command command, String label, String[] args);
 
-    protected ItemStack getItemInBank(ItemStack itemPassed, Bank bank, Player player) {
+    protected ECItemStack getItemInBank(ECItem itemPassed, Bank bank, Player player) {
         // TODO: implement mee senpaii~~!
         throw new UnsupportedOperationException("Not supported yet.");
     }

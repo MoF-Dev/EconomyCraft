@@ -34,6 +34,7 @@ import th.in.mihome.economyCraft.trading.Market;
 import th.in.mihome.economyCraft.trading.Quote;
 
 import static th.in.mihome.economyCraft.AbstractCommandExecutor.ensureGoods;
+import th.in.mihome.economyCraft.ECItem;
 
 /**
  *
@@ -48,19 +49,23 @@ public class OfferCommand extends TradingCommand {
     @Override
     public boolean onTradingCommand(Player sender, Market market, Command command, String label, String[] args) {
         try {
-            ItemStack item = sender.getInventory().getItemInMainHand();
-            if (item == null) {
+            ItemStack mcItem = sender.getInventory().getItemInMainHand();
+            if (mcItem == null) {
                 throw new InvalidArgumentException("You must offer some item!");
             }
             int amount = extractInt(args, 1, null);
             if (amount <= 0) {
-                amount = item.getAmount();
+                amount = mcItem.getAmount();
             }
-            item.setAmount(Math.min(item.getAmount(), amount));
+            mcItem.setAmount(Math.min(mcItem.getAmount(), amount));
             int value = extractMonetaryValue(args, 0, false, "Missing order price.");
+            
+            ECItem item = plugin.getItem(mcItem);
+            
             // TODO warn player if this is a dum move?
-            ensureGoods(sender, item);
-            market.list(new Quote(sender, item, value, market, Quote.Side.OFFER));
+            // Okay to use ItemStack since this directly deals with player's inventory.
+            ensureGoods(sender, mcItem);
+            market.list(new Quote(sender, item, mcItem.getAmount(), value, market, Quote.Side.OFFER));
             sender.sendMessage("Order listed.");
             return true;
         } catch (UnfulfilledRequirementException ex) {
