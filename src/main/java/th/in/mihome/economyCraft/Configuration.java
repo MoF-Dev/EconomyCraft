@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -123,7 +125,7 @@ public class Configuration extends PluginComponent {
 
         CREATE_TABLE_SQL = preprocess(getResourceAsString("createTables.sql"));
         
-        COLOR_SCHEME = new ColorScheme();
+        COLOR_SCHEME = new ColorScheme(config);
     }
 
     public ECItem getItemInfo(Material material) {

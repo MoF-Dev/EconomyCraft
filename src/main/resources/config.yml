@@ -3,6 +3,11 @@
 plugin:
     player_id_source: UNIQUE_ID
 
+formatting:
+    color:
+        error: RED
+        warning: YELLOW
+
 economy:
     tariff:
         linear: 4096

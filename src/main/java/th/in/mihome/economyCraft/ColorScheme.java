@@ -24,16 +24,24 @@
 package th.in.mihome.economyCraft;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  *
  * @author Kolatat Thangkasemvathana <kolatat.t@gmail.com>
  */
 public class ColorScheme {
-    // fields are config-dependent
-    // TODO access and init from plugin.config
-    //      currently defined explicitly
-    public final ChatColor WARNING = ChatColor.YELLOW;
-    public final ChatColor ERROR = ChatColor.RED;
+    
+    private static final String PATH = "formatting.color";
+
+    public ColorScheme(FileConfiguration fconfig) {
+        ConfigurationSection config = fconfig.getConfigurationSection(PATH);
+        
+        WARNING = ChatColor.valueOf(config.getString("warning"));
+        ERROR = ChatColor.valueOf(config.getString("error"));
+    }
+    
+    public final ChatColor WARNING;
+    public final ChatColor ERROR;
 }
