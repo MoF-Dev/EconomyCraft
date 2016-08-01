@@ -6,15 +6,14 @@ load: POSTWORLD
 database: true
 softdepend: [Vault]
 commands:
-    debug1:
     market_bid:
         description: Creates a bidding for an item in the nearest market.
         aliases: [newbid, bid]
-        usage: "Usage: /<command> <item_id>[,<item_damage>] <quantity> <bid_price>"
+        usage: "Usage: /<command> <item_id>[:<item_damage>] <quantity> <bid_price>"
     market_buy:
         description: Creates a bidding for an item in the nearest market with the market price.
         aliases: [buy]
-        usage: "Usage: /<command> <item_id>[,<item_damage>] <quantity> <bid_price>"
+        usage: "Usage: /<command> <item_id>[:<item_damage>] <quantity> <bid_price>"
     market_offer:
         description: Creates an offer for the currently held item in the nearest market. If the amount is not set, defaults to all selected.
         aliases: [newoffer, offer, ask, sell]

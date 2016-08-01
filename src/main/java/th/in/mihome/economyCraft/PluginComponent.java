@@ -50,7 +50,7 @@ public abstract class PluginComponent {
     }
 
     protected void log(Level level, String format, Object... args) {
-        plugin.getLogger().log(level, String.format("[%s] %s", getClass().getName(), String.format(format, args)));
+        plugin.getLogger().log(level, String.format("[%s] %s", getClass().getSimpleName(), String.format(format, args)));
     }
 
     protected void logException(Throwable ex, Level level) {
@@ -58,7 +58,7 @@ public abstract class PluginComponent {
     }
 
     protected void logException(Throwable ex, Level level, String msg) {
-        plugin.getLogger().log(level, String.format("From [%s]: %s", getClass().getName(), msg), ex);
+        plugin.getLogger().log(level, String.format("[%s]: %s", getClass().getSimpleName(), msg), ex);
     }
 
 }

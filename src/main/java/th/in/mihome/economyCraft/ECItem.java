@@ -40,12 +40,12 @@ public class ECItem {
     private final int pathWeight;
     private final ItemStack mcItem;
 
-    ECItem(int id, int durability, String displayName, String minecraftName, int pathWeight) {
+    ECItem(int id, int durability, String displayName, Material material, int pathWeight) {
         this.id = id;
         this.displayName = displayName;
-        this.minecraftName = minecraftName;
+        this.minecraftName = material.toString();
         this.pathWeight = pathWeight;
-        mcItem = new ItemStack(Material.getMaterial(minecraftName));
+        mcItem = new ItemStack(material);
         // item.setDurability((short) durability); // should be implicit in minecraftName
         this.durability = durability == -1 ? mcItem.getDurability() : durability;
         assert (this.durability == mcItem.getDurability());

@@ -94,12 +94,13 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
+                <!--<filtering>true</filtering>
                 <includes>
                     <include>**/*.yml</include>
                     <include>**/*.csv</include>
                     <include>**/*.sql</include>
-                </includes>
+                </includes>-->
             </resource>
         </resources>
     </build>

@@ -152,14 +152,20 @@ public class Configuration extends PluginComponent {
                 if (!nextLine[4].isEmpty()) {
                     pathWeight = Integer.parseInt(nextLine[4]);
                 }
-                ECItem item = new ECItem(
-                        Integer.parseInt(nextLine[0]),
-                        Integer.parseInt(nextLine[1]),
-                        nextLine[2],
-                        nextLine[3],
-                        pathWeight
-                );
-                itemDatabase.put(item.getMaterial(), item);
+                nextLine[3]=nextLine[3].toUpperCase();
+                Material material = Material.getMaterial(nextLine[3]);
+                if(material!=null){
+                    ECItem item = new ECItem(
+                            Integer.parseInt(nextLine[0]),
+                            Integer.parseInt(nextLine[1]),
+                            nextLine[2],
+                            material,
+                            pathWeight
+                    );
+                    itemDatabase.put(item.getMaterial(), item);
+                } else {
+                    log(Level.WARNING, "Error parsing item material: %s", nextLine[3]);
+                }
             }
         } catch (IOException ex) {
             logException(ex, Level.SEVERE);
