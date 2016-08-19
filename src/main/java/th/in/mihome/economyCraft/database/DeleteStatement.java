@@ -1,7 +1,7 @@
-/* 
+/*
  * The MIT License
  *
- * Copyright 2016 Kolatat Thangkasemvathana.
+ * Copyright 2016 Kolatat Thangkasemvathana <kolatat.t@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,42 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package th.in.mihome.economyCraft.database;
+
+import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
- * Author:  Kolatat Thangkasemvathana
- * Created: 21-May-2016
+ *
+ * @author Kolatat Thangkasemvathana <kolatat.t@gmail.com>
  */
+public class DeleteStatement {
+    
+    String table;
+    StringBuilder where = new StringBuilder();
+    Statement stmt;
 
-create table if not exists $bankTable (
-    id integer not null primary key autoincrement,
-    name varchar(255) not null,
-    world varchar(63),
-    x double not null,
-    y double not null,
-    z double not null,
-    address varchar(511));
+    DeleteStatement(Statement selectStmt, String table) {
+        this.stmt=selectStmt;
+        this.table=table;
+    }
 
-create table if not exists $marketTable (
-    id integer not null primary key autoincrement,
-    name varchar(255) not null,
-    world varchar(63),
-    x double not null,
-    y double not null,
-    z double not null,
-    address varchar(511));
+    public DeleteStatement where(String key, String value) {
+        if(where.length()!=0) where.append(" and ");
+        where.append('`').append(key).append("` = '").append(value).append('\'');
+        return this;
+    }
 
-CREATE TABLE if not exists $transactionTable (
-	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	`account`	TEXT NOT NULL,
-	`amount`	INTEGER NOT NULL,
-	`type`	TEXT NOT NULL,
-	`time`	NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`reference`	TEXT NOT NULL,
-	FOREIGN KEY(`account`) REFERENCES ec_accounts(account)
-);
-
-CREATE TABLE "ec_accounts" (
-	`account`	TEXT NOT NULL UNIQUE,
-	`balance`	INTEGER NOT NULL,
-	`updated`	NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(account)
-)
+    public int execute() throws SQLException {
+        String sql = String.format("delete from `%s` where %s", table, stmt);
+        //System.out.println(sql);
+        return stmt.executeUpdate(sql);
+    }
+    
+}

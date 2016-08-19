@@ -194,6 +194,10 @@ public class Database extends PluginComponent implements AutoCloseable {
     public SelectStatement select() {
         return new SelectStatement(selectStmt);
     }
+    
+    public DeleteStatement delete_from(String table){
+        return new DeleteStatement(selectStmt, table);
+    }
 
     public void updateBankAccount(String playerId, int amount) {
         try {
@@ -210,7 +214,7 @@ public class Database extends PluginComponent implements AutoCloseable {
         transactionSql = String.format("insert into `%s` (`account`,`amount`,`type`,`time`,`reference`) values (?,?,?,?,?)",
                 plugin.config.TABLE_TRANSACTIONS);
         getBankAccountSql = String.format("select `balance` from `%s` where `account`=?", plugin.config.TABLE_ACCOUNTS);
-        createBankAccountSql = String.format("insert into `%s` (`account`) values (?)", plugin.config.TABLE_ACCOUNTS);
+        createBankAccountSql = String.format("insert into `%s` (`account`,`balance`) values (?,0)", plugin.config.TABLE_ACCOUNTS);
         updateBankAccountSql = String.format("update `%s` set `balance`=`balance`+? where `account`=?", plugin.config.TABLE_ACCOUNTS);
     }
 

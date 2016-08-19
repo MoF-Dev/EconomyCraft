@@ -236,7 +236,7 @@ public class ECPlugin extends JavaPlugin implements Listener {
                 if (toAdd.isValid()) {
                     raw.add(toAdd);
                 } else {
-                    // TODO remove from db
+                    database.delete_from(config.TABLE_MARKETS).where("id",rs.getString("id")).execute();
                 }
             }
         } catch (SQLException ex) {
